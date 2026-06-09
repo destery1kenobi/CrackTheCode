@@ -1,0 +1,2054 @@
+
+/
+Claude finished the response
+I need to identify the top 3 escape game puzzle mechanics that can be recreated into a digital format to use in an interactive game build for learning. I will be showcasing these and how to vibe code them in an AI tools of their choice.
+
+Jun 8
+
+Reading the Rise learning games skill to inform my recommendations
+Reading the Rise learning games skill to inform my recommendations
+Here are the top 3 escape room puzzle mechanics that translate cleanly into digital learning, are worth showcasing, and are actually interesting to vibe code with AI tools.
+
+Top 3 Escape Puzzle Mechanics for Digital Learning
+1. 🔐 The Combination Lock / Code Cracker
+What it is in real life: Players gather scattered clues (a symbol on a painting, a number in a book, a color sequence on a poster) and combine them to unlock a padlock or keypad.
+
+Why it works digitally: This is the backbone of almost every escape game and maps cleanly to synthesis and recall — learners must find, connect, and apply information before they can progress. The digital version can be a number pad, a symbol selector, a cipher wheel, or a word entry — all interactable without external libraries.
+
+Learning fit: Procedural knowledge, sequencing, cause-and-effect understanding.
+
+Why it's great to vibe code: The AI has a clear, bounded problem — build an input mechanism, define correct answers, trigger a success state. Beginners can prompt something simple in 10 minutes. Advanced prompts can layer in clue tracking, wrong-answer feedback, and narrative flavor.
+
+2. 🗺️ The Hotspot / Scene Explorer
+What it is in real life: Players examine a physical room and click/touch objects to discover clues, collect items, and trigger interactions.
+
+Why it works digitally: A scene with interactive hotspots is one of the most powerful learning mechanics because it forces active observation — learners find information rather than being handed it. Each hotspot can reveal a clue, add an item to inventory, or unlock the next step. Zero external dependencies required.
+
+Learning fit: Risk identification, compliance inspection, noticing detail, field assessment, evidence finding.
+
+Why it's great to vibe code: The AI can generate a scene with SVG-based illustration, clickable zones, and feedback text with a clear single prompt. It's visual, tactile, and the code architecture teaches state management naturally (what's found, what's locked, what's available).
+
+3. 🧩 The Multi-Step Puzzle Chain (Gate & Key)
+What it is in real life: Puzzle A's solution unlocks Puzzle B's clue, which unlocks Puzzle C, which opens the final door. Nothing is available until its prerequisite is solved.
+
+Why it works digitally: The gate-and-key structure maps directly onto prerequisite learning — you can't apply a concept until you understand the foundation. It builds in natural scaffolding and creates a sense of momentum and progress that single-puzzle interactions can't match.
+
+Learning fit: Any complex topic with sequential steps, compliance training with multi-stage processes, onboarding flows.
+
+Why it's great to vibe code: This is the most instructive mechanic to show in a workshop because it introduces state machines — the AI must track which puzzles are solved and gate content accordingly. That concept (game state → unlock logic) is directly transferable to more advanced build work.
+
+Why These Three (And Not Others)
+Mechanic	Skipped?	Why
+Physical lock picking	✗	Too hardware-specific; weak learning analog
+UV light / hidden text	✗	Gimmicky in digital, thin on learning depth
+Team communication puzzles	✗	Requires multiplayer; hard to vibe code solo
+Cipher / decoder	Honorable mention	Overlaps heavily with #1; include as a variation
+Workshop Sequencing Suggestion
+If you're showing how to vibe code these with an AI tool, go in this order:
+
+Code Cracker — Fastest win, clear success state, good for showing prompting iteration
+Hotspot Explorer — Shows visual + interaction together; teaches SVG + state
+Puzzle Chain — Shows how to build on #1 and #2 with gate logic; ties everything together
+Want me to build a demo of any of these — or all three — as production-ready Rise code blocks you can use in the showcase itself?
+
+How would we structure the code cracker puzzle - it will need to be in html, css, and js - this will end up being a web app hosted on a site or git repo.
+
+Jun 8
+Let me pull up the frontend design skill before we get into structure.
+
+
+Reading frontend design skill for visual direction
+Reading frontend design skill for visual direction
+Good. Here's how to structure the Code Cracker as a proper web app — file architecture, component logic, and the interaction model — before writing a single line of code.
+
+Code Cracker Web App: Structure
+File Architecture
+Keep it flat and simple. This is a teaching project, so clarity beats cleverness.
+
+/code-cracker/
+├── index.html        ← shell, semantic structure only
+├── style.css         ← design system + all component styles
+├── app.js            ← all game logic, state, and DOM interaction
+└── /assets/          ← optional, if you add audio or images
+No build tools. No framework. Vanilla HTML/CSS/JS so anyone can open it, read it, and prompt an AI to modify any layer independently.
+
+The Three Layers and What Each Owns
+index.html — Structure only
+
+Game wrapper div
+Scene/clue display area
+Input mechanism (keypad, cipher wheel, text input — pick one)
+Feedback panel
+Hint button + hint display
+Success/failure state overlay
+No logic. No inline styles. Just semantic containers and id/data- attributes.
+
+style.css — Visual system
+
+CSS custom properties at :root for all colors, spacing, type, radius
+Dark theme by default (escape game aesthetic reads better, easier to contrast)
+States for every interactive element: default, hover, active, disabled, correct, incorrect
+Transitions on state changes only — not decorative animation
+One signature visual element (suggestion: a glitch-flicker on wrong input, or a lock-disengage animation on success)
+app.js — All logic
+
+Game config object at the top (this is the only thing the AI needs to swap to change content)
+State object tracking progress
+Functions: checkAnswer(), showHint(), revealClue(), triggerSuccess(), triggerFail(), resetGame()
+Event listeners wired to DOM elements
+No HTML generation inside JS — manipulate classes and textContent only
+State Object (the core of the whole thing)
+js
+const gameState = {
+  currentPuzzle: 0,
+  hintsUsed: 0,
+  attemptsOnCurrent: 0,
+  solved: [],
+  startTime: null
+};
+Everything flows from this. When a puzzle is solved, push its ID into solved[], increment currentPuzzle, and re-render what's visible. Simple, readable, easy to prompt.
+
+Puzzle Config (content separated from logic)
+js
+const PUZZLES = [
+  {
+    id: 'puzzle-1',
+    clue: 'The server log shows an anomaly at exactly this timestamp...',
+    clueDetail: '[ exhibits/log-excerpt.png or inline text ]',
+    answer: '1347',
+    hints: [
+      'Look at the highlighted row.',
+      'The timestamp is in 24-hour format — just the hour and minute.',
+      'It happened at 13:47.'
+    ],
+    successMessage: 'Access granted. Proceeding to next layer.'
+  }
+  // add more puzzles here
+];
+This is the only block someone needs to touch to change the game's content. Any AI tool can rewrite just this section without breaking anything else.
+
+Interaction Model Options (pick one for v1)
+Option	Best for	Complexity
+Number keypad	PIN/code metaphor, mobile-friendly	Low
+Text input + submit	Word/phrase answers, flexible	Low
+Symbol selector	Pattern-matching, more visual	Medium
+Cipher wheel	High engagement, strong theme	High
+For a showcase, number keypad is the right call. It's instantly understood, looks designed, and is the clearest to vibe code step by step.
+
+Interaction Flow (per puzzle)
+Clue displayed
+    ↓
+Learner examines clue → enters code on keypad
+    ↓
+checkAnswer() fires on submit
+    ↓
+  [Correct] → success animation → load next puzzle (or win state)
+  [Incorrect] → shake animation → increment attempts → show "Try Again"
+    ↓ (if attempts ≥ 2)
+Hint button activates → hints ladder up each time it's pressed
+    ↓
+All puzzles solved → end state with recap (time, hints used, attempts)
+What Makes This Vibe-Code Friendly
+The structure above is deliberately prompt-targetable by layer:
+
+"Change the visual theme to a sci-fi aesthetic" → touches only style.css
+"Add a third puzzle about network security" → touches only the PUZZLES config
+"Make the hint system show only one hint at a time" → touches only showHint() in app.js
+"Add a timer that counts down from 5 minutes" → one new state variable + one display element
+That's the teaching point for the showcase: good structure makes AI assistance faster and more precise because the model has a smaller, clearer target.
+
+Want me to build the full v1 now — keypad, 2–3 puzzles, dark themed, production-ready — so you have a working demo to show and riff on?
+
+lets start with the number keypad - eventually I will want to make all of them.  build the full v1 now.
+
+Jun 8
+
+Checking the rise learning games skill animation library reference
+Checking the rise learning games skill animation library reference
+Good. Building the full v1 now — three puzzles, dark escape-room aesthetic, number keypad, complete state machine, hint ladder, end recap. Proper file-per-layer structure output as a single deployable HTML file.
+
+
+Created 3 files, ran a command
+Created 3 files, ran a command
+Now let me verify the files look right and bundle them into a single deployable HTML for anyone who wants to just drop it in a repo or host it directly:
+
+
+Ran 3 commands, read a file
+Ran 3 commands, read a file
+Here's what you've got.
+
+What Was Built
+Four files delivered:
+
+code-cracker-standalone.html — single file, drop anywhere, works immediately
+index.html + style.css + app.js — the clean three-layer version for a repo
+What's Inside
+3 puzzles, each with a different clue mechanic:
+
+Lock 01 — read an access log, find the anomaly timestamp
+Lock 02 — decode a grid, read shaded columns
+Lock 03 — count keyword frequency in intercepted text
+Full game loop:
+
+Intro screen → puzzle chain → win recap
+Live timer, progress pips, puzzle counter
+Auto-submit when 4 digits are entered
+Shake animation + red flash on wrong answer, pulse on correct
+3-step hint ladder per puzzle (each press reveals the next level)
+End screen: time, hints used, attempts, 4-tier rating (Elite / Agent / Recruit / Cadet)
+Keyboard support — type numbers, Backspace to delete, Enter to submit
+The One Thing To Edit for New Content
+Everything in the top of app.js under const PUZZLES = [...] — that's the only block that needs to change to make a completely different game. The AI prompting story writes itself: "Here's my PUZZLES array. Add a fourth puzzle about phishing awareness."
+
+Next: want me to build the Hotspot Explorer next, or do you want to add anything to this one first — theming, a different topic, or a leaderboard?
+
+
+Code cracker standalone
+Code · HTML 
+
+Index
+Code · HTML 
+
+Style
+Code · CSS 
+
+cam we make the keys more keypadish? Maybe some button beeps as we push them? More glass effect numbers showing as well. More dynamic design.
+
+Jun 8
+
+Viewed 4 files
+Viewed 4 files
+Good, I've got the full picture. Now I'll rebuild the keypad and display sections with: real 3D glass keys with depth, Web Audio API beeps, glowing seven-segment style number display, and a more dynamic overall feel.
+
+
+Ran 3 commands, read a file
+Ran 3 commands, read a file
+Here's what changed in v2.
+
+What's New
+3D Physical Keys Keys have actual depth — a box-shadow stack that simulates a 5px "height," a top specular highlight, and a glass sheen overlay. When pressed, they physically travel downward 4px and the shadow collapses. Each key has a color-coded variant: neutral for numbers, amber for CLR, blue-lit for the Enter key.
+
+Ripple on Press Click/tap position is tracked and set as CSS custom properties (--rx, --ry) so the ripple burst originates exactly where your finger landed, not the center.
+
+Beep Engine via Web Audio API No files, no dependencies — pure synthesized audio:
+
+Digit keys: short high-frequency square wave click with a sine tail
+CLR: lower triangle wave thud
+Wrong answer: two descending sawtooth barks
+Correct: ascending 4-note chime
+Win screen: 5-note melody
+Seven-Segment Style Display Each digit slot is now a recessed display housing with:
+
+A ghost 8 behind every digit (the dim "inactive segments" effect)
+Glowing cyan text with text-shadow bloom when filled
+Color state changes: blue when filled → red + shake on error → green pulse on correct
+Blinking cursor on the next empty slot
+Ambient Scanlines A fixed repeating-linear-gradient overlay across the whole viewport gives it that CRT / security terminal texture.
+
+Staggered Success Animation Correct answer triggers digits going green one by one with 80ms offset between them before advancing.
+
+
+Code cracker v2
+Code · HTML 
+Any other suggestions for this interaction? How can we improve on it?
+
+Jun 8
+Here's an honest assessment of where it stands and what's actually worth adding vs. what would just be noise.
+
+What's Working Well
+The core loop is solid — clue → input → feedback → advance. The audio, 3D keys, and display are doing real work. Don't touch those.
+
+Genuine Improvements Worth Making
+1. Wrong Answer Counter + Escalating Pressure
+Right now wrong answers are consequence-free. Add a visible attempt counter per lock. After 3 wrong attempts, something changes — the hint button glows amber and pulses, or a "WARNING: Lockout imminent" message appears. You never actually lock them out (bad for learning), but the threat creates tension. This is the single highest-impact change for engagement.
+
+2. The Clue Panel is Static — It Should React
+Right now the clue just sits there. Two small upgrades:
+
+Typewriter effect when a new puzzle loads — the clue body types itself in at ~30ms per character. Costs very little, adds enormous atmosphere.
+Highlight the specific relevant part of the detail block when a hint is requested. Hint 1 does nothing. Hint 2 adds a CSS highlight class to the key line. Hint 3 adds a stronger one. Right now hints are just text — making them point at the clue is much more instructional.
+3. No Transition Between Puzzles
+The jump from puzzle 1 to puzzle 2 is abrupt. A quick "LOCK RELEASED" overlay (dark panel, green text, fades in/out in ~800ms) before loading the next clue would make each unlock feel like an event rather than a page swap. Right now the success message in the feedback strip is easy to miss.
+
+4. The Win Screen Doesn't Teach Anything
+The recap shows time/hints/attempts/rating but doesn't connect back to the content. For a learning game, this is a missed opportunity. Add a brief "What you demonstrated" section — one line per puzzle summarizing the skill used (e.g., "Pattern recognition in sequential data"). That's what makes it eLearning vs. just a game.
+
+5. Code Length Mismatch
+All three puzzles use 4-digit codes. Puzzle 3 (keyword counting) would be more interesting as a 3-digit code (one digit per keyword count: 332) — it removes the ambiguity of "why 4 digits from 3 counts?" and makes the puzzle logic cleaner. Small fix, but it removes a point of confusion.
+
+Things That Sound Good But Aren't Worth It Here
+Idea	Why to skip it
+Countdown timer / time pressure	Kills accessibility, creates anxiety not challenge — wrong for learning
+More puzzles	Depth > length. Three tight puzzles beats five loose ones
+Sound toggle button	Worth adding only if you have more varied/louder audio — current beeps are unobtrusive
+Particle effects on win	Adds nothing instructional, risks feeling cheap
+Leaderboard	Fun, but requires backend — out of scope for a standalone file
+Priority Order If You're Building These Out
+Transition overlay between puzzles — biggest feel improvement, ~30 lines of code
+Typewriter clue reveal — atmosphere, maybe 20 lines
+Wrong answer counter with visual escalation — tension and stakes
+Hint → clue highlighting — makes hints actually instructional
+Win screen learning recap — connects it back to learning outcomes
+Want me to build all five of these into a v3? Or pick the ones you want and I'll target those specifically.
+
+build all 5 please.
+
+Jun 8
+On it.
+
+
+Viewed 3 files
+Viewed 3 files
+Good, I have the full picture. Building v3 now with all five improvements wired in.
+
+
+Ran 2 commands, read a file
+Ran 2 commands, read a file
+Here's exactly what's in v3 and where each of the five lives in the code.
+
+What Changed
+1. Lock Transition Overlay Full-screen dark panel with a padlock SVG icon, "LOCK RELEASED" badge, the puzzle's success message, a progress sub-line ("Proceeding to Lock 02..."), and a sweeping green progress bar. Fades in over 250ms, holds for ~1.4 seconds, fades out, then loads the next puzzle. The final lock says "Extracting evidence..." before the win screen.
+
+2. Typewriter Clue Reveal When a puzzle loads, the title types in at 18ms/char, then the clue body types in at 14ms/char. A blinking block cursor (▋) trails behind each. The detail panel (the log/grid/message) appears instantly — it's reference material, not narrative, so it shouldn't delay. The typewriter state is tracked so a new puzzle always cancels a still-running previous typewrite.
+
+3. Wrong Answer Counter + Escalating Pressure Three red pip dots below the keypad track wrong attempts per puzzle. After 2 wrong attempts: the hint button pulses amber on a 1.2s loop, a "⚠ WARNING — ACCESS REVOCATION IMMINENT" strip slides up, and a two-tone warning beep fires. You never actually lock them out — the threat is the mechanic, not the punishment.
+
+4. Hint → Clue Highlighting Each puzzle now has a hintHighlights array that maps hint levels to specific line indices in the detail panel. Hint 2 applies a soft amber background (hl-1) to the relevant lines. Hint 3 upgrades to a stronger glow highlight (hl-2). Hint 1 is text-only — gives direction without pointing. The highlighting is injected live via renderDetail() which rebuilds the detail panel with <span> wrappers on the flagged lines.
+
+5. Win Screen Learning Recap Each puzzle has a skill label and a recap string in the config. The win screen now builds a "Skills Demonstrated" section from those — one row per puzzle with a checkmark, the skill name in accent mono, and a plain-language sentence connecting what they did to a real-world application. Fully driven by content in the PUZZLES array.
+
+Bonus fix — Puzzle 3 is now a 3-digit code (332), matching the actual puzzle logic: one digit per keyword count. No more confusion about why 3 keywords produce 4 digits.
+
+
+Code cracker v3
+Code · HTML 
+can we put the code keypad and the instrutions and puzzle side by side so we dont have to scroll
+
+Jun 8
+Good call — the stacked layout is the main UX friction point. Let me read the v3 file fully before restructuring.
+
+
+Viewed 2 files
+Viewed 2 files
+Good. I have everything I need. The core job is: header spans full width, below it a two-column grid — clue left, keypad right — both equal height, no scroll. Mobile falls back to stacked. I'll also tighten sizes so everything fits a typical viewport.
+
+
+Edited 7 files, ran a command
+Edited 7 files, ran a command
+Now update the HTML structure to wrap game content in the two-column layout:
+
+
+Wrap clue panel and keypad section in two-column game-body grid, add column divs
+Wrap clue panel and keypad section in two-column game-body grid, add column divs
+Now add the responsive breakpoint and fix the outer border on game-body:
+
+
+Replace responsive section with updated breakpoints for two-column layout
+Replace responsive section with updated breakpoints for two-column layout
+Now fix the display-housing label background — it referenced var(--panel) which won't match the new column background properly, and remove the keypad-section::before pseudo that assumed full width:
+
+
+Edited 5 files, ran 2 commands, viewed a file
+Edited 5 files, ran 2 commands, viewed a file
+Here's what changed structurally.
+
+Layout Changes
+Two-column game body — a CSS Grid wraps the clue panel (left) and keypad section (right) in a 1fr 1fr split below the header. The header still spans full width. Both columns share equal height — no element forces the other to scroll.
+
+Borders are seamed, not doubled — the clue panel drops its right border since the two columns share a single dividing line. The outer game-body div carries the perimeter border. It reads as one cohesive terminal unit rather than two stacked boxes.
+
+Keypad column is vertically centered — the keypad section uses justify-content: center so the keys, display, and hint button sit in the middle of the column rather than jammed to the top.
+
+Digit and key sizes tightened — clamp() values stepped down so the keypad fits comfortably in a ~460px column at typical viewport widths without overflow.
+
+Mobile fallback at 680px — below that breakpoint the grid collapses to a single column (clue on top, keypad below) with a horizontal divider between them. Same experience as v3, just the natural stack.
+
+Intro and win screens are capped at 520px/600px — so they don't stretch absurdly wide on a now-960px max container.
+
+
+Code cracker v4
+Code · HTML 
+make the clue instructions bigger and easier to read. Minimum 20 pt font
+
+Jun 8
+Quick read of v4 to find all the clue text sizing:
+
+
+Find all clue-related font sizes
+Find all clue-related font sizes
+Got it. Four targeted changes — eyebrow, title, body, and detail block:
+
+
+Edited 3 files, ran a command
+Edited 3 files, ran a command
+Now bump the clue panel padding so the larger text breathes:
+
+
+Increase clue panel padding for larger text
+Increase clue panel padding for larger text
+Also bump the label color so it's brighter — --label at 
+#7a8eaa is a bit dim at larger sizes:
+
+
+Edited a file, ran a command, read a file
+Edited a file, ran a command, read a file
+Four targeted changes:
+
+Clue body — 13px → clamp(15px, 1.8vw, 20px). Scales with viewport width, hits 20px at comfortable desktop sizes, never drops below 15px.
+
+Clue title — 14px → clamp(15px, 2vw, 18px). Stays proportional to body text without overpowering it.
+
+Detail block (the log/grid/message) — 12px → clamp(13px, 1.5vw, 16px). Monospace benefits from the bump — those aligned columns were hard to parse at 12px.
+
+Label color — nudged from 
+#7a8eaa to 
+#96aac4. Dim grey reads fine at 13px, but at 20px the low contrast becomes obvious. This keeps it muted but readable.
+
+Padding — clue panel padding bumped from 18px 20px to 22px 24px so the larger text isn't cramped against the edges.
+
+
+Code cracker v4
+Code · HTML 
+can we have the code to be broken appear after the text typewrites intopplace.
+
+Jun 8
+Quick check on the typewriter function:
+
+
+Find typewriter and detail render calls
+Find typewriter and detail render calls
+Line 992 is the one — renderDetail fires immediately, before the typewriter starts. One change: move it into the onDone callback of the clue typewrite, with a fade-in reveal animation.
+
+
+Ran a command, edited a file
+Ran a command, edited a file
+Now add the CSS for the reveal animation and reset state:
+
+
+Add detail fade-in reveal animation CSS
+Add detail fade-in reveal animation CSS
+Also fix the hint highlight path — renderDetail is called there too and needs to keep the detail-visible class:
+
+
+Edited a file, ran a command, read a file
+Edited a file, ran a command, read a file
+Done. The sequence is now:
+
+Title types in → clue body types in → 200ms pause → detail block fades up
+
+The detail starts at opacity: 0 and translateY(6px), then transitions to fully visible over 400ms when the .detail-visible class is added. The pause before it appears gives it the feel of the system "retrieving" the file after reading the briefing — rather than everything landing at once.
+
+Hint highlights still work correctly — re-rendering the detail keeps the detail-visible class so it doesn't disappear and re-fade on each hint.
+
+
+Code cracker v4
+Code · HTML 
+nice - what else could we do to make this better and more engaging.
+
+Jun 8
+Honest list, ranked by impact-to-effort ratio:
+
+High Impact, Reasonable Effort
+1. Ambient background animation Right now the background is static. A slow, subtle animated grid or pulse behind the panels — like a radar sweep or a breathing hex grid — would make the interface feel alive without touching gameplay. One CSS animation, no JS.
+
+2. Sound design upgrade The current beeps are functional but thin. Swap in richer layered tones — a low drone on the error state, a satisfying mechanical "thunk-click" on keypress using two oscillators in quick succession, and a proper multi-note unlock sequence on correct answers. Still all Web Audio, no files.
+
+3. Clue panel scan-line reveal Instead of a plain fade-up, the detail block could appear as if it's being "decoded" — characters start as random symbols (█ ▓ ▒ ░) and resolve into the real text line by line. Classic terminal decoding effect. Strong atmosphere, ~30 lines of JS.
+
+4. Per-puzzle visual theme shift Lock 01 (access log) stays blue/terminal. Lock 02 (cipher grid) shifts the accent to green matrix-style. Lock 03 (intercept) shifts to amber/radio-signal. Just CSS variable swaps on loadPuzzle — takes 10 minutes but makes each lock feel like a different system being breached.
+
+Medium Impact, More Work
+5. Intro sequence instead of a static screen Text boots up line by line: INITIALIZING... CONNECTING TO SERVER... AUTHENTICATION REQUIRED... 3 LOCKS DETECTED. Then the Begin Mission button fades in. Sets the tone before a single puzzle loads.
+
+6. Wrong answer glitch effect On a wrong answer, instead of just shake + red, the entire clue panel briefly glitches — characters scramble, a red scan line sweeps down, then it resolves back. Sells the "security system rejecting you" moment hard.
+
+7. Leaderboard via localStorage Store top 5 scores (time + rating) locally. Show them on the win screen. No backend needed. Gives replay value — players want to beat their own Elite time.
+
+8. Mobile haptic feedback navigator.vibrate() on keypress (10ms), wrong answer (200ms), correct answer (pattern: 50,30,100). Zero visual change, massive feel difference on mobile. Two lines per interaction.
+
+Lower Priority but Worth Noting
+9. Keyboard shortcut hints Small "press 1-9 to enter" tooltip that fades after first keypress. Most learners won't know keyboard input works.
+
+10. Puzzle editor mode A hidden ?edit=true URL param that shows a simple form to swap puzzle content without touching code. Makes it genuinely useful as a template for other people's content.
+
+What I'd Actually Build Next
+If this is for a showcase, the three that will visibly impress an audience most in a live demo:
+
+The glitch effect on wrong answer — visceral and unexpected
+Per-puzzle theme shifts — makes the game feel like three distinct systems
+The terminal boot intro sequence — sets the scene before anything loads
+Want me to build all three, or pick the ones that matter most to you?
+
+do all three of the recommended and then also the sound design upgrade.
+
+Jun 8
+Let me read the current file fully before touching anything.
+
+
+Viewed 3 files
+Viewed 3 files
+Got everything. Now building v5 — all four features in one clean pass directly into a new file.
+
+
+Ran 2 commands, read a file
+Ran 2 commands, read a file
+Here's what landed in v5.
+
+What's New
+Terminal Boot Sequence The static intro screen is replaced entirely. On load, 7 lines appear one by one with 500ms stagger — title, then status lines with OK badges, then a two-line alert about the 3 encrypted locks. Each line plays a quiet blip. The Begin Mission button fades in only after the last line. On replay, the old intro screen comes back (faster path, no waiting). The boot screen is its own screen state so the animation only runs once.
+
+Per-Puzzle Theme Shift Each lock has a theme index in the puzzle config that maps to a THEMES array. Lock 01 is blue terminal, Lock 02 flips to green matrix, Lock 03 shifts to amber signal intercept. The shift is a CSS custom property swap on :root — --accent, --accent-glow, --accent-dim, and --border-lit all transition simultaneously. Every element that uses var(--accent) — the progress pips, display cursor, key ripple, header counter, clue panel top bar — all shift together. The win screen resets to blue.
+
+Wrong Answer Glitch Effect On a wrong answer, the clue panel gets .glitch applied — a keyframe animation that runs hue-rotate + saturate + brightness shifts while also briefly applying clip-path: inset() cuts at different vertical slices, simulating corrupted display bands. A red scan line sweeps top to bottom via ::after. A reflow trick (offsetWidth) forces the animation to restart cleanly even on repeated wrong answers.
+
+Richer Sound Design Every sound event is now layered:
+
+Key press — two detuned square waves for the mechanical body + a high transient click
+Digit enter — randomised pitch tap with a sine harmonic on top
+Clear — triangle + sine for a soft weighted thud
+Error — two pairs of detuned sawtooth barks + a low sine drone underneath
+Glitch — 6 rapid random-frequency crackles staggered across 200ms
+Warning — two-tone descending square alert
+Hint — two-note ascending chime
+Success — 4-note ascending chime with slight stereo chorus on each note
+Win — 5-note melody with octave + fifth harmonics layered
+Theme shift — a filtered noise whoosh followed by a landing tone tuned to the new theme's character
+Boot tick — quiet square blip per boot line
+
+Code cracker v5
+Code · HTML 
+mission complete screen is hard to read - make it more readable and accessable
+
+Jun 8
+Let me read the current win screen CSS and HTML:
+
+
+Find all win screen CSS
+Find all win screen CSS
+Clear picture. The problems: tiny font throughout (8–13px), low-contrast --label and --muted colors, stat values using --accent (blue on dark = poor contrast), recap text too small and cramped, icon is small and dim. Fixing all of it.
+
+
+Ran a command, edited a file
+Ran a command, edited a file
+Now update the win screen HTML — replace the text checkmark icon with an SVG circle-check, and split recap-text into recap-skill + recap-body:
+
+
+Update win screen HTML — bigger icon, solid badge, better structure
+Update win screen HTML — bigger icon, solid badge, better structure
+Now update buildRecap() in JS to use the new recap-check + recap-body structure:
+
+
+Update buildRecap to use new accessible HTML structure
+Update buildRecap to use new accessible HTML structure
+Also fix the responsive rule that referenced the old padding:
+
+
+Fix responsive padding for win frame
+Fix responsive padding for win frame
+mission complete screen is hard to read - make it more readable and accessable - finish thisplease
+
+10:16 AM
+The last edit got cut off — let me check the current state of the file and push the output.
+
+
+Check win screen CSS is in v5b
+Check win screen CSS is in v5b
+All changes are in. Just needs copying to outputs.
+
+
+Ran a command, read a file
+Ran a command, read a file
+Here's exactly what changed on the win screen:
+
+Text sizes — body copy up from 13px to clamp(15px, 1.8vw, 18px). Recap body up from 12px to clamp(13px, 1.5vw, 15px). Skill labels up from 10px to 13px bold. Stat labels up from 8px to 11px. Nothing below 11px anywhere.
+
+Colors — title is pure 
+#ffffff instead of --text. Body copy is 
+#c8d8e8 — noticeably brighter than the old --label. Recap body is 
+#9ab8cc — still secondary but comfortably readable. Stat labels are 
+#8aabb0 — muted but legible. Stat values are white, not accent blue (blue on dark is always lower contrast than white).
+
+ACCESS GRANTED badge — flipped to solid green background with dark text instead of dim green text on a dim background. Now reads immediately.
+
+Stats — left border accent strip replaced the top-only border. Each stat card has border-left: 3px solid var(--success) so the visual grouping is clear without needing color contrast to do the work.
+
+Rating — the only stat value still in green, so it stands out from the other three white numbers. Makes it feel earned.
+
+Recap check icons — replaced the plain ✓ character with a proper SVG circle-check with a fill background, giving each item a clear visual anchor. Skill name is now bold white, recap description is secondary. Hierarchy is clear.
+
+Icon — bumped from 64px to 80px with a filled semi-transparent green background circle so it reads from a distance.
+
+
+Code cracker v5
+Code · HTML 
+1781018696204_image.png
+this part is still small - it can get wider if needed
+
+10:25 AM
+The recap section needs more breathing room and bigger type. Let me fix it directly.
+
+
+Ran a command, viewed a file
+Ran a command, viewed a file
+Got it. The recap is constrained by the 640px win-frame max-width and the type is still too small. Widening the frame, bumping all recap type sizes significantly, and giving each item more room.
+
+
+Edited 2 files
+Edited 2 files
+Also bump the check SVG to match the larger circle:
+
+
+Edited a file, ran a command, read a file
+Edited a file, ran a command, read a file
+Three specific fixes:
+
+Win frame wider — max-width up from 640px to 820px. The win screen was inheriting the game screen's narrower container. Now it can use the full width it needs.
+
+Recap body text — up from clamp(13px, 1.5vw, 15px) to clamp(15px, 1.7vw, 17px). Skill name up from 13px fixed to clamp(16px, 2vw, 19px). Both scale with viewport so they stay proportional at any size.
+
+Recap spacing — container padding from 20px 22px to 28px 30px. Item padding from 12px 0 to 18px 0. Gap between check icon and text from 14px to 18px. The check circle itself up from 22px to 28px with a slightly stronger border. More air around each item makes the content scannable without effort.
+
+Body copy color — nudged from 
+#9ab8cc to 
+#b0cce0, a touch brighter for better contrast against the dark card background.
+
+
+Code cracker v5
+Code · HTML 
+mission complete should not need to be scroleld - can we make it wider insted of taller?
+
+10:32 AM
+Let me see the current win screen layout fully before touching anything.
+
+
+Read win screen CSS and HTML
+Read win screen CSS and HTML
+Clear. The fix is a two-column grid inside the win frame — left column gets the icon/badge/title/body/stats/button, right column gets the full recap. Tall becomes wide.
+
+
+Restructure win frame to two-column layout — header left, recap right
+Restructure win frame to two-column layout — header left, recap right
+Now make win-stats span full width of left column, and win-recap fill full height of right column:
+
+
+Edited 2 files
+Edited 2 files
+Now update the HTML to wrap everything in the two-column divs:
+
+
+Viewed 2 files, edited a file
+Viewed 2 files, edited a file
+Now add the mobile fallback — single column below 680px:
+
+
+Edited a file, ran a command, read a file
+Edited a file, ran a command, read a file
+The win screen is now a two-column layout at 960px wide — same max-width as the game screen, so it matches the overall frame.
+
+Left column — icon, ACCESS GRANTED badge, title, body text, the 2×2 stats grid, and the Play Again button, all centered and vertically balanced.
+
+Right column — the full Skills Demonstrated recap, separated from the left by a subtle vertical divider. The recap now has the full column height to breathe into rather than fighting for vertical space.
+
+On mobile below 680px it collapses back to a single column with a horizontal divider between the two halves — same pattern used for the game screen.
+
+
+Code cracker v5
+Code · HTML 
+
+
+
+
+
+Claude is AI and can make mistakes. Please double-check responses.
+
+
+raw
+Code cracker v5 · HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code Cracker — Escape Puzzle</title>
+  <style>
+/* ════════════════════════════════════════════════════
+   RESET + TOKENS
+════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+:root {
+  --bg:          #06080d;
+  --surface:     #0b0f18;
+  --panel:       #0f1520;
+  --panel-2:     #151e2e;
+  --panel-3:     #1c2840;
+  --border:      rgba(255,255,255,0.06);
+  --border-lit:  rgba(74,158,255,0.4);
+  --text:        #d8e2f0;
+  --muted:       #4a566e;
+  --label:       #96aac4;
+ 
+  /* Theme accent — swapped per puzzle by JS */
+  --accent:      #4a9eff;
+  --accent-glow: rgba(74,158,255,0.3);
+  --accent-dim:  rgba(74,158,255,0.12);
+  --amber:       #f0a500;
+  --amber-dim:   rgba(240,165,0,0.1);
+  --danger:      #ff4d4d;
+  --danger-glow: rgba(255,77,77,0.35);
+  --danger-dim:  rgba(255,77,77,0.12);
+  --success:     #00e87a;
+  --success-glow:rgba(0,232,122,0.35);
+  --success-dim: rgba(0,232,122,0.1);
+ 
+  --font-ui:   -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'Courier New', Courier, monospace;
+  --tr: 120ms ease;
+}
+ 
+html, body { min-height: 100%; background: var(--bg); color: var(--text); font-family: var(--font-ui); -webkit-font-smoothing: antialiased; }
+ 
+/* scanlines */
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+  pointer-events: none; z-index: 9999;
+}
+ 
+#app {
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: clamp(10px,2vw,24px);
+}
+ 
+/* ════════════════════════════════════════════════════
+   SCREENS
+════════════════════════════════════════════════════ */
+.screen { display: none; width: 100%; max-width: 960px; }
+.screen.active { display: flex; flex-direction: column; align-items: center; animation: screenIn 300ms ease both; }
+@keyframes screenIn { from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);} }
+ 
+/* ════════════════════════════════════════════════════
+   LOCK TRANSITION OVERLAY
+════════════════════════════════════════════════════ */
+#lock-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 16px;
+  background: rgba(0,0,0,0.92);
+  opacity: 0; pointer-events: none; transition: opacity 250ms ease;
+}
+#lock-overlay.visible { opacity: 1; pointer-events: all; }
+.lock-overlay-icon { animation: lockPop 400ms cubic-bezier(0.17,0.67,0.4,1.4) both; }
+@keyframes lockPop { from{opacity:0;transform:scale(0.3) rotate(-15deg);}to{opacity:1;transform:scale(1) rotate(0deg);} }
+.lock-overlay-status { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em; color: var(--success); background: var(--success-dim); border: 1px solid rgba(0,232,122,0.3); padding: 3px 14px; box-shadow: 0 0 20px rgba(0,232,122,0.2); }
+.lock-overlay-msg { font-family: var(--font-mono); font-size: clamp(18px,4.5vw,26px); font-weight: 700; letter-spacing: 0.1em; color: var(--text); text-align: center; text-shadow: 0 0 30px rgba(0,232,122,0.3); }
+.lock-overlay-sub { font-size: 12px; color: var(--muted); letter-spacing: 0.06em; }
+.lock-overlay-bar { width: 200px; height: 2px; background: var(--panel-3); position: relative; overflow: hidden; }
+.lock-overlay-bar::after { content: ''; position: absolute; inset: 0; background: var(--success); transform: translateX(-100%); box-shadow: 0 0 8px var(--success); }
+#lock-overlay.visible .lock-overlay-bar::after { animation: barSweep 900ms ease forwards; }
+@keyframes barSweep { from{transform:translateX(-100%);}to{transform:translateX(0);} }
+ 
+/* ════════════════════════════════════════════════════
+   BOOT SCREEN
+════════════════════════════════════════════════════ */
+#screen-boot {
+  display: none; flex-direction: column; align-items: center;
+  justify-content: center; width: 100%; min-height: 60vh;
+}
+#screen-boot.active { display: flex; }
+ 
+.boot-terminal {
+  width: 100%; max-width: 520px;
+  background: #040608; border: 1px solid rgba(74,158,255,0.2);
+  padding: 32px 28px; font-family: var(--font-mono);
+  position: relative;
+}
+.boot-terminal::before, .boot-terminal::after {
+  content: ''; position: absolute; width: 20px; height: 20px;
+  border-color: var(--accent); border-style: solid;
+}
+.boot-terminal::before { top:-1px; left:-1px; border-width: 2px 0 0 2px; }
+.boot-terminal::after  { bottom:-1px; right:-1px; border-width: 0 2px 2px 0; }
+ 
+.boot-lines { display: flex; flex-direction: column; gap: 6px; min-height: 180px; }
+.boot-line {
+  font-size: 13px; color: var(--muted); letter-spacing: 0.04em;
+  opacity: 0; transform: translateX(-4px);
+  transition: opacity 200ms ease, transform 200ms ease;
+  display: flex; align-items: center; gap: 10px;
+}
+.boot-line.show { opacity: 1; transform: translateX(0); }
+.boot-line .bl-prefix { color: var(--accent); flex-shrink: 0; }
+.boot-line .bl-ok     { color: var(--success); margin-left: auto; font-size: 10px; letter-spacing: 0.1em; }
+.boot-line .bl-warn   { color: var(--amber); margin-left: auto; font-size: 10px; }
+.boot-line.title-line { color: var(--text); font-size: 20px; font-weight: 700; letter-spacing: 0.14em; margin-bottom: 8px; text-shadow: 0 0 30px var(--accent-glow); }
+ 
+.boot-btn-row { margin-top: 24px; opacity: 0; transition: opacity 400ms ease; }
+.boot-btn-row.show { opacity: 1; }
+ 
+/* ════════════════════════════════════════════════════
+   INTRO (fallback / replay)
+════════════════════════════════════════════════════ */
+.intro-frame {
+  width: 100%; max-width: 520px; background: var(--panel); border: 1px solid var(--border);
+  padding: 48px 40px; display: flex; flex-direction: column; align-items: center; gap: 20px; position: relative;
+}
+.intro-frame::before,.intro-frame::after { content:''; position:absolute; width:24px; height:24px; border-color:var(--accent); border-style:solid; }
+.intro-frame::before { top:-1px; left:-1px; border-width:2px 0 0 2px; }
+.intro-frame::after  { bottom:-1px; right:-1px; border-width:0 2px 2px 0; }
+.intro-badge  { font-family:var(--font-mono); font-size:9px; letter-spacing:0.22em; color:var(--amber); background:var(--amber-dim); border:1px solid rgba(240,165,0,0.4); padding:3px 12px; }
+.intro-title  { font-family:var(--font-mono); font-size:clamp(30px,7vw,46px); font-weight:700; letter-spacing:0.14em; color:var(--text); text-shadow:0 0 40px var(--accent-glow); text-align:center; }
+.intro-subtitle { font-size:12px; color:var(--muted); letter-spacing:0.06em; text-align:center; }
+.intro-divider { width:100%; height:1px; background:linear-gradient(90deg,transparent,var(--accent),transparent); opacity:0.3; }
+.intro-body   { font-size:13px; color:var(--label); line-height:1.7; text-align:center; max-width:340px; }
+.intro-stats  { display:flex; align-items:center; gap:24px; background:var(--panel-2); border:1px solid var(--border); padding:14px 24px; width:100%; justify-content:center; }
+.stat-item    { display:flex; flex-direction:column; align-items:center; gap:2px; }
+.stat-num     { font-family:var(--font-mono); font-size:22px; font-weight:700; color:var(--accent); line-height:1; }
+.stat-label   { font-size:9px; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; }
+.stat-divider { width:1px; height:36px; background:var(--border); }
+ 
+/* ════════════════════════════════════════════════════
+   BUTTONS
+════════════════════════════════════════════════════ */
+.btn-primary {
+  font-family:var(--font-mono); font-size:11px; font-weight:700; letter-spacing:0.16em;
+  color:var(--bg); background:var(--accent); border:none; padding:14px 40px;
+  cursor:pointer; width:100%;
+  clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+  transition:background var(--tr),box-shadow var(--tr),transform 80ms ease;
+  box-shadow:0 0 20px var(--accent-glow);
+}
+.btn-primary:hover { background:#6db4ff; box-shadow:0 0 32px var(--accent-glow); }
+.btn-primary:active { transform:scale(0.98); }
+.btn-primary:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+ 
+/* ════════════════════════════════════════════════════
+   GAME SCREEN — two-column
+════════════════════════════════════════════════════ */
+#screen-game { gap:0; align-items:stretch !important; }
+ 
+.game-header {
+  width:100%; display:flex; align-items:center; justify-content:space-between;
+  padding:8px 14px; background:var(--surface);
+  border:1px solid var(--border); border-bottom:1px solid var(--border-lit);
+  flex-shrink:0;
+  transition: border-bottom-color 600ms ease;
+}
+.game-body {
+  display:grid; grid-template-columns:1fr 1fr; gap:0; width:100%; flex:1; min-height:0;
+  border:1px solid var(--border); border-top:none;
+}
+.clue-col  { display:flex; flex-direction:column; border-right:1px solid var(--border); min-height:0; overflow:hidden; }
+.keypad-col{ display:flex; flex-direction:column; min-height:0; }
+ 
+.header-left,.header-right { display:flex; align-items:center; gap:8px; }
+.label-tag { font-family:var(--font-mono); font-size:9px; letter-spacing:0.16em; color:var(--muted); }
+.header-counter { font-family:var(--font-mono); font-size:13px; color:var(--accent); transition:color 600ms; }
+.progress-track { display:flex; gap:6px; align-items:center; }
+.progress-pip { width:28px; height:3px; background:var(--panel-3); border:1px solid var(--border); transition:background 300ms,border-color 300ms,box-shadow 300ms; }
+.progress-pip.done   { background:var(--success); border-color:var(--success); box-shadow:0 0 6px var(--success-glow); }
+.progress-pip.active { background:var(--accent-dim); border-color:var(--accent); box-shadow:0 0 6px var(--accent-glow); }
+ 
+/* ════════════════════════════════════════════════════
+   CLUE PANEL
+════════════════════════════════════════════════════ */
+.clue-panel {
+  flex:1; background:var(--panel); border:1px solid var(--border);
+  border-top:none; border-right:none;
+  padding:22px 24px; position:relative; overflow-y:auto;
+  display:flex; flex-direction:column; gap:0;
+}
+.clue-panel::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,var(--accent) 0%,transparent 80%);
+  transition: background 600ms ease;
+}
+.clue-eyebrow { display:flex; align-items:center; gap:7px; font-family:var(--font-mono); font-size:11px; letter-spacing:0.15em; color:var(--muted); margin-bottom:10px; }
+.clue-title   { font-family:var(--font-mono); font-size:clamp(15px,2vw,18px); font-weight:700; color:var(--text); letter-spacing:0.04em; margin-bottom:12px; min-height:22px; line-height:1.4; }
+.clue-body    { font-size:clamp(15px,1.8vw,20px); color:var(--label); line-height:1.75; min-height:40px; }
+ 
+.clue-body.typing::after,.clue-title.typing::after {
+  content:'▋'; animation:tblink 600ms step-end infinite; color:var(--accent); font-size:0.9em;
+}
+@keyframes tblink { 0%,100%{opacity:1;}50%{opacity:0;} }
+ 
+.clue-detail {
+  margin-top:14px; padding:14px; background:var(--panel-2);
+  border-left:2px solid var(--amber);
+  font-family:var(--font-mono); font-size:clamp(13px,1.5vw,16px);
+  color:var(--amber); line-height:1.75; white-space:pre;
+  overflow-x:auto; position:relative;
+  opacity:0; transform:translateY(6px);
+  transition:opacity 400ms ease,transform 400ms ease, border-color 600ms ease;
+}
+.clue-detail.detail-visible { opacity:1; transform:translateY(0); }
+.clue-detail:empty { display:none; }
+.clue-detail .hl-1 { background:rgba(240,165,0,0.18); border-radius:2px; padding:0 2px; transition:background 300ms; }
+.clue-detail .hl-2 { background:rgba(240,165,0,0.38); border-radius:2px; padding:0 2px; box-shadow:0 0 8px rgba(240,165,0,0.3); }
+ 
+/* ════════════════════════════════════════════════════
+   GLITCH EFFECT — wrong answer
+════════════════════════════════════════════════════ */
+.clue-panel.glitch { animation: panelGlitch 600ms ease both; }
+ 
+@keyframes panelGlitch {
+  0%  { filter:none; transform:translateX(0); }
+  8%  { filter:hue-rotate(90deg) saturate(3) brightness(1.4); transform:translateX(-3px); }
+  16% { filter:hue-rotate(180deg) saturate(2) brightness(0.8); transform:translateX(3px); }
+  24% { filter:hue-rotate(270deg) saturate(3) brightness(1.2); transform:translateX(-2px); clip-path:inset(20% 0 40% 0); }
+  32% { filter:none; transform:translateX(2px); clip-path:inset(60% 0 10% 0); }
+  40% { filter:hue-rotate(90deg) brightness(1.5); transform:translateX(-1px); clip-path:none; }
+  55% { filter:none; transform:translateX(0); }
+  65% { filter:brightness(1.1); }
+  100%{ filter:none; transform:translateX(0); clip-path:none; }
+}
+ 
+/* Red scan-line that sweeps on error */
+.clue-panel::after {
+  content:''; position:absolute; left:0; right:0; height:3px;
+  background:linear-gradient(90deg,transparent,rgba(255,50,50,0.7),transparent);
+  top:-3px; opacity:0; pointer-events:none;
+  transition: none;
+}
+.clue-panel.glitch::after {
+  animation: scanSweep 400ms ease 80ms both;
+}
+@keyframes scanSweep {
+  from { top:-3px; opacity:0.9; }
+  to   { top:100%; opacity:0; }
+}
+ 
+/* ════════════════════════════════════════════════════
+   ATTEMPT COUNTER
+════════════════════════════════════════════════════ */
+.attempt-row { width:100%; display:flex; align-items:center; justify-content:space-between; padding:0 2px; }
+.attempt-label { font-family:var(--font-mono); font-size:9px; letter-spacing:0.12em; color:var(--muted); }
+.attempt-pips  { display:flex; gap:5px; align-items:center; }
+.attempt-pip { width:8px; height:8px; border-radius:50%; background:var(--panel-3); border:1px solid var(--border); transition:background 200ms,border-color 200ms,box-shadow 200ms; }
+.attempt-pip.used { background:var(--danger); border-color:var(--danger); box-shadow:0 0 5px var(--danger-glow); }
+ 
+.btn-hint.warn { color:var(--amber)!important; border-color:rgba(240,165,0,0.5)!important; animation:hintPulse 1.2s ease infinite; }
+@keyframes hintPulse { 0%,100%{box-shadow:0 0 0px rgba(240,165,0,0);}50%{box-shadow:0 0 14px rgba(240,165,0,0.4);} }
+ 
+.lockout-warning { font-family:var(--font-mono); font-size:10px; letter-spacing:0.12em; color:var(--amber); text-align:center; width:100%; opacity:0; height:0; overflow:hidden; transition:opacity 300ms,height 300ms; }
+.lockout-warning.visible { opacity:1; height:18px; }
+ 
+/* ════════════════════════════════════════════════════
+   KEYPAD SECTION
+════════════════════════════════════════════════════ */
+.keypad-section {
+  flex:1; background:var(--panel); border:1px solid var(--border);
+  border-top:none; border-left:none;
+  padding:16px 16px 14px;
+  display:flex; flex-direction:column; align-items:center;
+  gap:10px; position:relative; justify-content:center; min-height:0;
+}
+ 
+/* ════════════════════════════════════════════════════
+   DISPLAY
+════════════════════════════════════════════════════ */
+.display-housing {
+  width:100%; background:#04070c; border:2px solid #0d1626;
+  border-radius:4px; padding:12px 16px 10px;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,0.8),inset 0 0 30px rgba(0,0,0,0.5),0 0 1px rgba(74,158,255,0.2);
+  position:relative;
+}
+.display-housing::before { content:'INPUT CODE'; position:absolute; top:-8px; left:12px; font-family:var(--font-mono); font-size:8px; letter-spacing:0.18em; color:var(--muted); background:var(--panel); padding:0 6px; }
+.code-display { display:flex; gap:8px; justify-content:center; }
+ 
+.code-digit {
+  width:clamp(44px,9vw,60px); height:clamp(52px,11vw,68px);
+  position:relative; background:#030508; border:1px solid #0a1020;
+  border-radius:3px; display:flex; align-items:center; justify-content:center;
+  overflow:hidden; transition:border-color 200ms,box-shadow 200ms;
+}
+.code-digit::before { content:'8'; font-family:var(--font-mono); font-size:clamp(24px,5vw,34px); font-weight:900; color:rgba(74,158,255,0.06); position:absolute; user-select:none; pointer-events:none; }
+.digit-val { font-family:var(--font-mono); font-size:clamp(24px,5vw,34px); font-weight:900; color:transparent; position:relative; z-index:1; transition:color 80ms,text-shadow 80ms; letter-spacing:-0.02em; }
+.code-digit.active-cursor .digit-val::after { content:''; display:inline-block; width:2px; height:0.7em; background:var(--accent); margin-left:2px; vertical-align:middle; animation:blink 900ms step-end infinite; box-shadow:0 0 6px var(--accent); }
+@keyframes blink { 0%,100%{opacity:1;}50%{opacity:0;} }
+.code-digit.empty  .digit-val { color:transparent; }
+.code-digit.filled .digit-val { color:#4af; text-shadow:0 0 8px rgba(74,170,255,0.9),0 0 20px rgba(74,170,255,0.4); }
+.code-digit.filled { border-color:rgba(74,158,255,0.25); box-shadow:inset 0 0 12px rgba(74,158,255,0.08),0 0 6px rgba(74,158,255,0.1); }
+.code-digit.error  .digit-val { color:var(--danger); text-shadow:0 0 8px var(--danger-glow),0 0 20px var(--danger-glow); animation:shake 380ms ease both; }
+.code-digit.error  { border-color:rgba(255,77,77,0.4); box-shadow:inset 0 0 16px rgba(255,77,77,0.12),0 0 8px rgba(255,77,77,0.15); }
+.code-digit.success .digit-val { color:var(--success); text-shadow:0 0 10px var(--success-glow),0 0 24px var(--success-glow); }
+.code-digit.success { border-color:rgba(0,232,122,0.4); box-shadow:inset 0 0 16px rgba(0,232,122,0.1),0 0 10px rgba(0,232,122,0.2); animation:successPulse 500ms ease both; }
+ 
+@keyframes successPulse { 0%{transform:scale(1);}40%{transform:scale(1.05);}100%{transform:scale(1);} }
+@keyframes shake { 0%{transform:translateX(0);}15%{transform:translateX(-7px);}30%{transform:translateX(7px);}45%{transform:translateX(-5px);}60%{transform:translateX(5px);}75%{transform:translateX(-2px);}90%{transform:translateX(2px);}100%{transform:translateX(0);} }
+ 
+/* ════════════════════════════════════════════════════
+   FEEDBACK
+════════════════════════════════════════════════════ */
+.feedback-strip { font-family:var(--font-mono); font-size:10px; letter-spacing:0.12em; text-align:center; min-height:16px; color:var(--muted); transition:color 150ms; }
+.feedback-strip.error   { color:var(--danger); text-shadow:0 0 8px var(--danger-glow); }
+.feedback-strip.success { color:var(--success); text-shadow:0 0 8px var(--success-glow); }
+ 
+/* ════════════════════════════════════════════════════
+   KEYPAD — 3D GLASS
+════════════════════════════════════════════════════ */
+.keypad { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; width:100%; max-width:260px; background:#080d16; border:1px solid #0e1828; border-radius:6px; padding:10px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04),inset 0 -2px 8px rgba(0,0,0,0.6),0 4px 20px rgba(0,0,0,0.5); }
+.key { position:relative; aspect-ratio:1.1; cursor:pointer; border:none; background:transparent; padding:0; -webkit-tap-highlight-color:transparent; outline:none; }
+.key:focus-visible .key-face { box-shadow:0 0 0 2px var(--accent),0 4px 0 0 #0a0e18,inset 0 1px 0 rgba(255,255,255,0.15),inset 0 -1px 0 rgba(0,0,0,0.4); }
+.key-face {
+  position:absolute; inset:0; border-radius:5px;
+  background:linear-gradient(160deg,#1e2d44 0%,#141f30 40%,#0f1826 100%);
+  border:1px solid rgba(255,255,255,0.1); border-bottom:1px solid rgba(0,0,0,0.6);
+  box-shadow:0 5px 0 0 #050810,0 6px 4px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.12),inset 0 0 8px rgba(0,0,0,0.3);
+  transition:transform 60ms ease,box-shadow 60ms ease,background 100ms ease,border-color 100ms ease;
+  overflow:hidden;
+}
+.key-face::before { content:''; position:absolute; top:0; left:0; right:0; height:45%; background:linear-gradient(180deg,rgba(255,255,255,0.07) 0%,transparent 100%); border-radius:4px 4px 0 0; pointer-events:none; }
+.key-face::after  { content:''; position:absolute; inset:0; background:radial-gradient(circle at var(--rx,50%) var(--ry,50%),rgba(74,158,255,0.35) 0%,transparent 65%); opacity:0; transition:opacity 300ms ease; pointer-events:none; border-radius:inherit; }
+.key-label { position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:2px; pointer-events:none; }
+.key-num { font-family:var(--font-mono); font-size:clamp(18px,4.5vw,24px); font-weight:700; color:#b8c8e0; line-height:1; text-shadow:0 1px 2px rgba(0,0,0,0.5); transition:color 100ms,text-shadow 100ms; }
+.key-sub { font-family:var(--font-ui); font-size:7px; letter-spacing:0.1em; color:#3a4a60; line-height:1; text-transform:uppercase; transition:color 100ms; }
+ 
+.key:hover .key-face { background:linear-gradient(160deg,#253450 0%,#1a2840 40%,#131e30 100%); border-color:rgba(255,255,255,0.16); box-shadow:0 5px 0 0 #050810,0 6px 4px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.18),inset 0 0 12px rgba(74,158,255,0.08); }
+.key:hover .key-num { color:#cce0ff; text-shadow:0 0 8px rgba(74,158,255,0.4); }
+ 
+.key.pressed .key-face,.key:active .key-face { transform:translateY(4px); box-shadow:0 1px 0 0 #050810,0 2px 3px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.06),inset 0 2px 6px rgba(0,0,0,0.4); background:linear-gradient(160deg,#1a2840 0%,#0f1c2e 100%); border-color:rgba(74,158,255,0.3); }
+.key.pressed .key-face::after { opacity:1; }
+.key.pressed .key-num { color:var(--accent); text-shadow:0 0 10px var(--accent-glow); }
+.key.pressed .key-sub { color:rgba(74,158,255,0.5); }
+ 
+.key-clear .key-face { background:linear-gradient(160deg,#221a0a 0%,#160f04 100%); border-color:rgba(240,165,0,0.15); }
+.key-clear .key-num  { font-size:clamp(11px,2.5vw,13px); letter-spacing:0.08em; color:#7a6020; }
+.key-clear:hover .key-face { background:linear-gradient(160deg,#2e2210 0%,#1e1608 100%); border-color:rgba(240,165,0,0.3); }
+.key-clear:hover .key-num  { color:var(--amber); text-shadow:0 0 8px rgba(240,165,0,0.5); }
+.key-clear.pressed .key-num,.key-clear:active .key-num { color:var(--amber); }
+.key-clear .key-face::after { background:radial-gradient(circle at var(--rx,50%) var(--ry,50%),rgba(240,165,0,0.3) 0%,transparent 65%); }
+ 
+.key-submit .key-face { background:linear-gradient(160deg,#0e2040 0%,#081428 100%); border-color:rgba(74,158,255,0.25); box-shadow:0 5px 0 0 #030810,0 6px 4px rgba(0,0,0,0.5),inset 0 1px 0 rgba(74,158,255,0.2),inset 0 0 12px rgba(74,158,255,0.06),0 0 16px rgba(74,158,255,0.1); }
+.key-submit .key-num  { font-size:clamp(20px,5vw,26px); color:var(--accent); text-shadow:0 0 10px var(--accent-glow); }
+.key-submit:hover .key-face { background:linear-gradient(160deg,#142a50 0%,#0c1e3a 100%); box-shadow:0 5px 0 0 #030810,0 6px 4px rgba(0,0,0,0.5),inset 0 1px 0 rgba(74,158,255,0.25),inset 0 0 16px rgba(74,158,255,0.1),0 0 20px rgba(74,158,255,0.2); }
+.key-submit:disabled .key-face { opacity:0.3; cursor:not-allowed; }
+.key-submit:disabled { cursor:not-allowed; }
+.key-submit:disabled:active .key-face { transform:none; }
+ 
+/* ════════════════════════════════════════════════════
+   HINT
+════════════════════════════════════════════════════ */
+.hint-row { width:100%; display:flex; justify-content:center; }
+.btn-hint { display:flex; align-items:center; gap:7px; background:none; border:1px solid var(--border); color:var(--muted); font-family:var(--font-mono); font-size:9px; letter-spacing:0.12em; padding:7px 16px; cursor:pointer; transition:color var(--tr),border-color var(--tr),box-shadow var(--tr); border-radius:3px; }
+.btn-hint:hover { color:var(--amber); border-color:rgba(240,165,0,0.4); box-shadow:0 0 12px rgba(240,165,0,0.1); }
+.btn-hint:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.btn-hint:disabled { opacity:0.25; cursor:not-allowed; }
+.hint-badge { background:var(--amber-dim); border:1px solid rgba(240,165,0,0.4); color:var(--amber); font-size:8px; font-weight:700; padding:1px 6px; border-radius:2px; line-height:1.5; }
+.hint-panel { width:100%; background:linear-gradient(135deg,rgba(240,165,0,0.05),rgba(240,165,0,0.02)); border:1px solid rgba(240,165,0,0.2); border-left:2px solid var(--amber); padding:12px; animation:slideDown 200ms ease both; }
+@keyframes slideDown { from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);} }
+.hint-label { font-family:var(--font-mono); font-size:8px; letter-spacing:0.18em; color:var(--amber); margin-bottom:5px; }
+.hint-text  { font-size:12px; color:var(--label); line-height:1.6; }
+ 
+/* ════════════════════════════════════════════════════
+   WIN SCREEN
+════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════
+   WIN SCREEN
+════════════════════════════════════════════════════ */
+.win-frame {
+  width: 100%; max-width: 960px;
+  background: #0d1520;
+  border: 1px solid rgba(0,232,122,0.2);
+  border-top: 3px solid var(--success);
+  padding: clamp(24px,3vw,40px) clamp(20px,3vw,40px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  gap: 0;
+  box-shadow: 0 0 80px rgba(0,232,122,0.08), 0 0 0 1px rgba(0,0,0,0.4);
+}
+ 
+/* Left column — icon, badge, title, body, stats, button */
+.win-left {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 18px;
+  padding-right: clamp(20px,3vw,40px);
+  border-right: 1px solid rgba(255,255,255,0.07);
+  justify-content: center;
+}
+ 
+/* Right column — recap */
+.win-right {
+  display: flex; flex-direction: column;
+  padding-left: clamp(20px,3vw,40px);
+  justify-content: center;
+}
+ 
+.win-icon { animation: popIn 500ms cubic-bezier(0.17,0.67,0.4,1.4) both; }
+@keyframes popIn { from{opacity:0;transform:scale(0.4);}to{opacity:1;transform:scale(1);} }
+ 
+.win-badge {
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.2em; font-weight: 700;
+  color: #0d1520;
+  background: var(--success);
+  border: none;
+  padding: 5px 16px;
+  box-shadow: 0 0 20px rgba(0,232,122,0.4);
+}
+ 
+.win-title {
+  font-family: var(--font-mono);
+  font-size: clamp(26px, 5vw, 38px);
+  font-weight: 700; letter-spacing: 0.06em;
+  color: #ffffff;
+  text-align: center;
+  text-shadow: 0 0 40px rgba(0,232,122,0.35);
+  line-height: 1.2;
+}
+ 
+.win-body {
+  font-size: clamp(15px, 1.8vw, 18px);
+  color: #c8d8e8;
+  text-align: center; line-height: 1.7;
+  max-width: 380px;
+}
+ 
+/* ─── Stat grid ─────────────────────────────────── */
+.win-stats {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px; width: 100%;
+}
+ 
+.win-stat {
+  background: #0a1018;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-left: 3px solid var(--success);
+  padding: 16px 18px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+ 
+.win-stat-label {
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.12em; color: #8aabb0;
+  text-transform: uppercase;
+}
+ 
+.win-stat-val {
+  font-family: var(--font-mono);
+  font-size: clamp(22px, 3.5vw, 30px);
+  font-weight: 700; line-height: 1;
+  color: #ffffff;
+}
+ 
+/* Rating gets a green tint to stand out */
+.win-stat:last-child .win-stat-val { color: var(--success); }
+ 
+/* ─── Recap ─────────────────────────────────────── */
+.win-recap {
+  width: 100%; height: 100%;
+  background: transparent;
+  border: none;
+  border-left: 3px solid rgba(74,158,255,0.4);
+  padding: 4px 0 4px 24px;
+}
+ 
+.win-recap-label {
+  font-family: var(--font-mono); font-size: 13px;
+  letter-spacing: 0.16em; color: #6ab0ff;
+  margin-bottom: 22px;
+  display: flex; align-items: center; gap: 12px;
+  text-transform: uppercase;
+}
+ 
+.win-recap-label::after {
+  content: ''; flex: 1; height: 1px;
+  background: rgba(255,255,255,0.08);
+}
+ 
+.recap-item {
+  display: flex; align-items: flex-start;
+  gap: 18px; padding: 18px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.recap-item:last-child { border-bottom: none; padding-bottom: 0; }
+ 
+.recap-check {
+  width: 28px; height: 28px; flex-shrink: 0;
+  background: rgba(0,232,122,0.15);
+  border: 1px solid rgba(0,232,122,0.5);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 2px;
+}
+.recap-check svg { display: block; }
+ 
+.recap-text { flex: 1; }
+ 
+.recap-skill {
+  font-family: var(--font-mono);
+  font-size: clamp(16px, 2vw, 19px);
+  font-weight: 700;
+  color: #ffffff;
+  display: block; margin-bottom: 6px;
+  letter-spacing: 0.03em;
+}
+ 
+.recap-body {
+  font-size: clamp(15px, 1.7vw, 17px);
+  color: #b0cce0;
+  line-height: 1.7;
+}
+ 
+/* ════════════════════════════════════════════════════
+   RESPONSIVE + A11Y
+════════════════════════════════════════════════════ */
+@media (max-width:680px) {
+  .game-body { grid-template-columns:1fr; }
+  .clue-col  { border-right:none; border-bottom:1px solid var(--border); }
+  .clue-panel { border-right:1px solid var(--border); }
+  .keypad-section { border-left:1px solid var(--border); }
+  .screen { max-width:480px; }
+  .win-frame { grid-template-columns: 1fr; }
+  .win-left  { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.07); padding-right: 0; padding-bottom: 24px; }
+  .win-right { padding-left: 0; padding-top: 24px; }
+}
+@media (max-width:400px) {
+  .intro-frame,.win-frame { padding: 24px 16px; }
+  .keypad { padding:8px; gap:5px; }
+  .win-recap { padding:12px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  *,*::before,*::after { animation-duration:0.01ms!important; transition-duration:0.01ms!important; }
+}
+  </style>
+</head>
+<body>
+<div id="app">
+ 
+  <!-- LOCK OVERLAY -->
+  <div id="lock-overlay" role="status" aria-live="assertive" aria-atomic="true">
+    <div class="lock-overlay-icon">
+      <svg viewBox="0 0 56 56" width="56" height="56">
+        <rect x="10" y="24" width="36" height="26" rx="3" fill="none" stroke="var(--success)" stroke-width="1.5"/>
+        <path d="M18 24V17a10 10 0 0 1 20 0v7" fill="none" stroke="var(--success)" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="28" cy="37" r="3" fill="var(--success)" opacity="0.8"/>
+        <line x1="28" y1="40" x2="28" y2="44" stroke="var(--success)" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="lock-overlay-status">LOCK RELEASED</div>
+    <div class="lock-overlay-msg" id="overlay-msg">—</div>
+    <div class="lock-overlay-sub" id="overlay-sub">Preparing next lock...</div>
+    <div class="lock-overlay-bar"></div>
+  </div>
+ 
+  <!-- BOOT SCREEN -->
+  <div id="screen-boot" class="screen active" role="main" aria-label="System Boot">
+    <div class="boot-terminal">
+      <div class="boot-lines" id="boot-lines"></div>
+      <div class="boot-btn-row" id="boot-btn-row">
+        <button class="btn-primary" id="btn-start">BEGIN MISSION</button>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- INTRO (replay) -->
+  <div id="screen-intro" class="screen" role="main" aria-label="Game Introduction">
+    <div class="intro-frame">
+      <div class="intro-badge">CLASSIFIED</div>
+      <h1 class="intro-title">CODE CRACKER</h1>
+      <p class="intro-subtitle">Three locks. One exit. No second chances.</p>
+      <div class="intro-divider"></div>
+      <p class="intro-body">You've infiltrated the system. Three encrypted locks stand between you and the evidence. Read carefully. Enter the correct code to advance.</p>
+      <div class="intro-stats">
+        <div class="stat-item"><span class="stat-num">3</span><span class="stat-label">Puzzles</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat-item"><span class="stat-num">3</span><span class="stat-label">Hints Each</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat-item"><span class="stat-num">∞</span><span class="stat-label">Attempts</span></div>
+      </div>
+      <button class="btn-primary" id="btn-start-2">BEGIN MISSION</button>
+    </div>
+  </div>
+ 
+  <!-- GAME -->
+  <div id="screen-game" class="screen" role="main" aria-label="Game Puzzle">
+    <header class="game-header" id="game-header">
+      <div class="header-left">
+        <span class="label-tag">LOCK</span>
+        <span id="puzzle-counter" class="header-counter">01 / 03</span>
+      </div>
+      <div class="header-center">
+        <div id="progress-track" class="progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="3">
+          <div class="progress-pip" data-pip="0"></div>
+          <div class="progress-pip" data-pip="1"></div>
+          <div class="progress-pip" data-pip="2"></div>
+        </div>
+      </div>
+      <div class="header-right">
+        <span class="label-tag">TIME</span>
+        <span id="timer-display" class="header-counter">00:00</span>
+      </div>
+    </header>
+ 
+    <div class="game-body">
+      <div class="clue-col">
+        <section class="clue-panel" id="clue-panel" aria-live="polite" aria-label="Clue">
+          <div class="clue-eyebrow">
+            <svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="6" y1="3" x2="6" y2="6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="6" cy="8.5" r=".75" fill="currentColor"/></svg>
+            INTELLIGENCE FILE
+          </div>
+          <h2 id="puzzle-title" class="clue-title"></h2>
+          <p id="puzzle-clue" class="clue-body"></p>
+          <div id="puzzle-detail" class="clue-detail"></div>
+        </section>
+      </div>
+ 
+      <div class="keypad-col">
+        <section class="keypad-section" aria-label="Code Entry">
+          <div class="display-housing">
+            <div class="code-display" id="code-display" aria-live="assertive" aria-label="Entered code"></div>
+          </div>
+          <div id="feedback-strip" class="feedback-strip" aria-live="assertive" role="status"></div>
+          <div class="attempt-row">
+            <span class="attempt-label">ATTEMPTS</span>
+            <div class="attempt-pips" id="attempt-pips" aria-label="Wrong attempts">
+              <div class="attempt-pip" data-pip="0"></div>
+              <div class="attempt-pip" data-pip="1"></div>
+              <div class="attempt-pip" data-pip="2"></div>
+            </div>
+          </div>
+          <div class="lockout-warning" id="lockout-warning">⚠ WARNING — ACCESS REVOCATION IMMINENT</div>
+          <div class="keypad" role="group" aria-label="Number keypad">
+            <button class="key" data-value="1" aria-label="1"><div class="key-face"></div><div class="key-label"><span class="key-num">1</span></div></button>
+            <button class="key" data-value="2" aria-label="2"><div class="key-face"></div><div class="key-label"><span class="key-num">2</span><span class="key-sub">ABC</span></div></button>
+            <button class="key" data-value="3" aria-label="3"><div class="key-face"></div><div class="key-label"><span class="key-num">3</span><span class="key-sub">DEF</span></div></button>
+            <button class="key" data-value="4" aria-label="4"><div class="key-face"></div><div class="key-label"><span class="key-num">4</span><span class="key-sub">GHI</span></div></button>
+            <button class="key" data-value="5" aria-label="5"><div class="key-face"></div><div class="key-label"><span class="key-num">5</span><span class="key-sub">JKL</span></div></button>
+            <button class="key" data-value="6" aria-label="6"><div class="key-face"></div><div class="key-label"><span class="key-num">6</span><span class="key-sub">MNO</span></div></button>
+            <button class="key" data-value="7" aria-label="7"><div class="key-face"></div><div class="key-label"><span class="key-num">7</span><span class="key-sub">PQRS</span></div></button>
+            <button class="key" data-value="8" aria-label="8"><div class="key-face"></div><div class="key-label"><span class="key-num">8</span><span class="key-sub">TUV</span></div></button>
+            <button class="key" data-value="9" aria-label="9"><div class="key-face"></div><div class="key-label"><span class="key-num">9</span><span class="key-sub">WXYZ</span></div></button>
+            <button class="key key-clear" id="btn-clear" aria-label="Clear entry"><div class="key-face"></div><div class="key-label"><span class="key-num">CLR</span></div></button>
+            <button class="key" data-value="0" aria-label="0"><div class="key-face"></div><div class="key-label"><span class="key-num">0</span></div></button>
+            <button class="key key-submit" id="btn-submit" aria-label="Submit code" disabled><div class="key-face"></div><div class="key-label"><span class="key-num">↵</span></div></button>
+          </div>
+          <div class="hint-row">
+            <button class="btn-hint" id="btn-hint" aria-expanded="false">
+              <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 5.2C5.5 4.3 6.1 3.5 7 3.5s1.5.7 1.5 1.7c0 .8-.4 1.3-1 1.8C6.9 7.4 6.5 7.9 6.5 8.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="7" cy="10.2" r=".75" fill="currentColor"/></svg>
+              REQUEST HINT <span id="hint-count-label" class="hint-badge">3</span>
+            </button>
+          </div>
+          <div id="hint-panel" class="hint-panel" aria-live="polite" hidden>
+            <div class="hint-label">HINT</div>
+            <p id="hint-text" class="hint-text"></p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- WIN -->
+  <div id="screen-win" class="screen" role="main" aria-label="Mission Complete">
+    <div class="win-frame">
+ 
+      <!-- LEFT: identity + stats + replay -->
+      <div class="win-left">
+        <div class="win-icon" aria-hidden="true">
+          <svg viewBox="0 0 80 80" width="72" height="72">
+            <circle cx="40" cy="40" r="36" fill="rgba(0,232,122,0.1)" stroke="var(--success)" stroke-width="2"/>
+            <circle cx="40" cy="40" r="36" fill="none" stroke="var(--success)" stroke-width="2" opacity="0.25" style="filter:blur(6px)"/>
+            <polyline points="24,40 34,52 56,28" fill="none" stroke="var(--success)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="win-badge">ACCESS GRANTED</div>
+        <h1 class="win-title">Mission Complete</h1>
+        <p class="win-body">You cracked all three locks and extracted the evidence. Well done, agent.</p>
+        <div class="win-stats">
+          <div class="win-stat"><span class="win-stat-label">Time</span><span class="win-stat-val" id="final-time">—</span></div>
+          <div class="win-stat"><span class="win-stat-label">Hints Used</span><span class="win-stat-val" id="final-hints">—</span></div>
+          <div class="win-stat"><span class="win-stat-label">Attempts</span><span class="win-stat-val" id="final-attempts">—</span></div>
+          <div class="win-stat"><span class="win-stat-label">Rating</span><span class="win-stat-val" id="final-rating">—</span></div>
+        </div>
+        <button class="btn-primary" id="btn-replay">PLAY AGAIN</button>
+      </div>
+ 
+      <!-- RIGHT: skills recap -->
+      <div class="win-right">
+        <div id="win-recap" class="win-recap"></div>
+      </div>
+ 
+    </div>
+  </div>
+ 
+</div>
+<script>
+(function () {
+  'use strict';
+ 
+  /* ════════════════════════════════════════════════════
+     PUZZLE THEMES — accent per lock
+     accent/glow/dim are CSS var overrides applied to :root
+  ════════════════════════════════════════════════════ */
+  const THEMES = [
+    { // Lock 1 — blue terminal
+      accent: '#4a9eff', glow: 'rgba(74,158,255,0.3)', dim: 'rgba(74,158,255,0.12)',
+      headerBorder: 'rgba(74,158,255,0.4)', label: 'TERMINAL ACCESS'
+    },
+    { // Lock 2 — green matrix
+      accent: '#00e87a', glow: 'rgba(0,232,122,0.3)', dim: 'rgba(0,232,122,0.1)',
+      headerBorder: 'rgba(0,232,122,0.4)', label: 'CIPHER MATRIX'
+    },
+    { // Lock 3 — amber intercept
+      accent: '#f0a500', glow: 'rgba(240,165,0,0.3)', dim: 'rgba(240,165,0,0.1)',
+      headerBorder: 'rgba(240,165,0,0.4)', label: 'SIGNAL INTERCEPT'
+    }
+  ];
+ 
+  /* ════════════════════════════════════════════════════
+     PUZZLES
+  ════════════════════════════════════════════════════ */
+  const PUZZLES = [
+    {
+      id: 'lock-1', theme: 0,
+      title: 'LOCK 01 — The Access Log',
+      clue: 'The server room was breached at a specific time. Find the anomaly in the access log — only one entry breaks the recurring pattern. The code is the four-digit timestamp (HHMM) of that entry.',
+      detail:
+`ACCESS LOG — DOOR 4B
+08:30  CARD #0042  GRANTED
+09:15  CARD #0042  GRANTED
+10:00  CARD #0042  GRANTED
+11:22  CARD #0019  GRANTED
+12:00  CARD #0042  GRANTED
+13:45  CARD #0042  GRANTED`,
+      answer: '1122',
+      hints: ['Every entry except one follows a consistent interval pattern.','Card #0019 appears only once — and at an irregular time.','The anomaly is at 11:22. Enter 1122.'],
+      hintHighlights: [[],[4],[4]],
+      skill: 'Pattern Recognition',
+      recap: 'You identified a deviation in a sequential log by recognising an irregular interval and an unknown actor.'
+    },
+    {
+      id: 'lock-2', theme: 1,
+      title: 'LOCK 02 — The Cipher Grid',
+      clue: 'Find every column that contains at least one X across all rows. Read those column numbers in ascending order — that is your code.',
+      detail:
+`     COL: 1  2  3  4  5  6  7  8
+ROW A:    .  X  .  .  X  .  .  X
+ROW B:    .  .  .  X  .  .  X  .
+ROW C:    .  X  .  .  .  X  .  .
+ 
+Shaded columns (sorted):`,
+      answer: '2468',
+      hints: ['Scan each column top to bottom. Mark any column with at least one X.','Row A → 2,5,8  Row B → 4,7  Row C → 2,6. Combine and remove duplicates.','Unique columns sorted: 2,4,6,8. Enter 2468.'],
+      hintHighlights: [[],[1,2,3],[1,2,3]],
+      skill: 'Data Synthesis',
+      recap: 'You combined information across multiple rows, removed duplicates, and sorted the results — a core data analysis skill.'
+    },
+    {
+      id: 'lock-3', theme: 2,
+      title: 'LOCK 03 — The Payload Message',
+      clue: 'Count how many times each keyword appears in the intercepted message. Read the three counts together as a three-digit code.',
+      detail:
+`MESSAGE INTERCEPT #447:
+"ALPHA team reached BETA site. ALPHA
+confirmed BETA protocol active. GAMMA
+signal lost — re-establish GAMMA link.
+ALPHA standing by at BETA checkpoint."
+ 
+Count: ALPHA=?  BETA=?  GAMMA=?`,
+      answer: '332',
+      hints: ['Read through and tally each keyword independently.','ALPHA: lines 2,3,5 — that\'s 3. BETA: lines 2,3,5 — also 3.','ALPHA=3, BETA=3, GAMMA=2. Enter 332.'],
+      hintHighlights: [[],[1,2,3,4,5],[1,2,3,4,5]],
+      skill: 'Frequency Analysis',
+      recap: 'You performed keyword frequency analysis — counting term occurrences in unstructured text. Used in content audits, log analysis, and threat detection.'
+    }
+  ];
+ 
+  /* ════════════════════════════════════════════════════
+     AUDIO ENGINE — richer, layered
+  ════════════════════════════════════════════════════ */
+  let audioCtx = null;
+  function getAudio() {
+    if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} }
+    return audioCtx;
+  }
+ 
+  function tone(freq, dur, vol, type, detune) {
+    const ctx = getAudio(); if (!ctx) return null;
+    try {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type = type || 'sine';
+      o.frequency.setValueAtTime(freq, ctx.currentTime);
+      if (detune) o.detune.setValueAtTime(detune, ctx.currentTime);
+      g.gain.setValueAtTime(0, ctx.currentTime);
+      g.gain.linearRampToValueAtTime(vol, ctx.currentTime + 0.005);
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur);
+      o.start(ctx.currentTime); o.stop(ctx.currentTime + dur + 0.01);
+      return { o, g };
+    } catch(e) { return null; }
+  }
+ 
+  // KEY CLICK — mechanical thunk: two detuned square waves + click transient
+  function playKeyClick() {
+    tone(180, 0.04, 0.12, 'square');
+    tone(190, 0.04, 0.08, 'square', 15);
+    tone(2400, 0.015, 0.06, 'square'); // click transient
+  }
+ 
+  // DIGIT ENTER — rising tap, slightly randomised pitch
+  function playDigit() {
+    const base = 1100 + Math.random() * 300;
+    tone(base, 0.06, 0.07, 'square');
+    tone(base * 1.5, 0.04, 0.03, 'sine');
+  }
+ 
+  // CLEAR — low soft thud
+  function playClear() {
+    tone(220, 0.1, 0.08, 'triangle');
+    tone(110, 0.12, 0.04, 'sine');
+  }
+ 
+  // ERROR — dissonant double bark + low drone
+  function playError() {
+    tone(160, 0.18, 0.12, 'sawtooth');
+    tone(155, 0.18, 0.08, 'sawtooth', -20);
+    setTimeout(() => {
+      tone(200, 0.15, 0.1, 'sawtooth');
+      tone(195, 0.15, 0.06, 'sawtooth', 20);
+    }, 130);
+    // low drone underneath
+    setTimeout(() => tone(80, 0.3, 0.05, 'sine'), 50);
+  }
+ 
+  // WARNING — two-tone alert
+  function playWarning() {
+    tone(440, 0.12, 0.09, 'square');
+    setTimeout(() => tone(330, 0.18, 0.07, 'square'), 160);
+  }
+ 
+  // HINT — soft chime
+  function playHint() {
+    tone(880, 0.12, 0.06, 'sine');
+    setTimeout(() => tone(1100, 0.1, 0.04, 'sine'), 80);
+  }
+ 
+  // SUCCESS — ascending chime chord
+  function playSuccess() {
+    const notes = [523, 659, 784, 1047];
+    notes.forEach((f, i) => setTimeout(() => {
+      tone(f, 0.2, 0.08, 'sine');
+      tone(f * 1.005, 0.2, 0.04, 'sine'); // slight chorus
+    }, i * 70));
+  }
+ 
+  // WIN — triumphant multi-note with harmonics
+  function playWin() {
+    const melody = [523, 659, 784, 880, 1047];
+    melody.forEach((f, i) => setTimeout(() => {
+      tone(f, 0.25, 0.09, 'sine');
+      tone(f * 2, 0.2, 0.03, 'sine');      // octave harmonic
+      tone(f * 1.5, 0.15, 0.02, 'sine');   // fifth harmonic
+    }, i * 110));
+  }
+ 
+  // BOOT TICK — quiet blip per boot line
+  function playBootTick() { tone(800, 0.04, 0.04, 'square'); }
+ 
+  // THEME SHIFT — whoosh + landing tone when accent changes
+  function playThemeShift(accentFreq) {
+    // Whoosh: descending noise-ish sweep
+    const ctx = getAudio(); if (!ctx) return;
+    try {
+      const buf = ctx.createBuffer(1, ctx.sampleRate * 0.3, ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / data.length) * 0.15;
+      const src = ctx.createBufferSource();
+      const filt = ctx.createBiquadFilter();
+      filt.type = 'bandpass'; filt.frequency.value = 2000; filt.Q.value = 0.5;
+      src.buffer = buf; src.connect(filt); filt.connect(ctx.destination);
+      src.start(ctx.currentTime);
+    } catch(e) {}
+    setTimeout(() => tone(accentFreq || 440, 0.2, 0.05, 'sine'), 150);
+  }
+ 
+  // GLITCH SOUND — rapid random crackle
+  function playGlitch() {
+    const ctx = getAudio(); if (!ctx) return;
+    [0, 40, 80, 120, 160, 200].forEach(delay => {
+      setTimeout(() => {
+        tone(100 + Math.random() * 800, 0.05, 0.08, 'sawtooth');
+      }, delay);
+    });
+  }
+ 
+  /* ════════════════════════════════════════════════════
+     STATE
+  ════════════════════════════════════════════════════ */
+  const state = {
+    currentPuzzle: 0, inputBuffer: [],
+    hintsUsed: 0, hintsUsedThisPuzzle: 0,
+    wrongThisPuzzle: 0, totalAttempts: 0,
+    startTime: null, timerInterval: null,
+    typewriterTimer: null, locked: false
+  };
+ 
+  /* ════════════════════════════════════════════════════
+     DOM
+  ════════════════════════════════════════════════════ */
+  const screens = {
+    boot:  document.getElementById('screen-boot'),
+    intro: document.getElementById('screen-intro'),
+    game:  document.getElementById('screen-game'),
+    win:   document.getElementById('screen-win')
+  };
+  const el = {
+    start:         document.getElementById('btn-start'),
+    start2:        document.getElementById('btn-start-2'),
+    replay:        document.getElementById('btn-replay'),
+    puzzleCounter: document.getElementById('puzzle-counter'),
+    timer:         document.getElementById('timer-display'),
+    puzzleTitle:   document.getElementById('puzzle-title'),
+    puzzleClue:    document.getElementById('puzzle-clue'),
+    puzzleDetail:  document.getElementById('puzzle-detail'),
+    codeDisplay:   document.getElementById('code-display'),
+    feedback:      document.getElementById('feedback-strip'),
+    keys:          document.querySelectorAll('.key[data-value]'),
+    btnClear:      document.getElementById('btn-clear'),
+    btnSubmit:     document.getElementById('btn-submit'),
+    btnHint:       document.getElementById('btn-hint'),
+    hintPanel:     document.getElementById('hint-panel'),
+    hintText:      document.getElementById('hint-text'),
+    hintCount:     document.getElementById('hint-count-label'),
+    pips:          document.querySelectorAll('.progress-pip'),
+    attemptPips:   document.querySelectorAll('#attempt-pips .attempt-pip'),
+    lockoutWarn:   document.getElementById('lockout-warning'),
+    overlay:       document.getElementById('lock-overlay'),
+    overlayMsg:    document.getElementById('overlay-msg'),
+    overlaySub:    document.getElementById('overlay-sub'),
+    cluePanel:     document.getElementById('clue-panel'),
+    gameHeader:    document.getElementById('game-header'),
+    finalTime:     document.getElementById('final-time'),
+    finalHints:    document.getElementById('final-hints'),
+    finalAttempts: document.getElementById('final-attempts'),
+    finalRating:   document.getElementById('final-rating'),
+    winRecap:      document.getElementById('win-recap'),
+    bootLines:     document.getElementById('boot-lines'),
+    bootBtnRow:    document.getElementById('boot-btn-row')
+  };
+ 
+  /* ════════════════════════════════════════════════════
+     SCREENS
+  ════════════════════════════════════════════════════ */
+  function showScreen(name) {
+    Object.entries(screens).forEach(([k, node]) => node.classList.toggle('active', k === name));
+  }
+ 
+  /* ════════════════════════════════════════════════════
+     BOOT SEQUENCE
+  ════════════════════════════════════════════════════ */
+  const BOOT_LINES = [
+    { text: 'CODE CRACKER', cls: 'title-line', delay: 0 },
+    { text: 'INITIALIZING SECURE CHANNEL...', prefix: '>', badge: 'OK', badgeCls: 'bl-ok', delay: 400 },
+    { text: 'CONNECTING TO REMOTE SERVER...', prefix: '>', badge: 'OK', badgeCls: 'bl-ok', delay: 900 },
+    { text: 'VERIFYING AGENT CREDENTIALS...', prefix: '>', badge: 'OK', badgeCls: 'bl-ok', delay: 1400 },
+    { text: 'LOADING INTELLIGENCE FILES...', prefix: '>', badge: 'OK', badgeCls: 'bl-ok', delay: 1900 },
+    { text: '3 ENCRYPTED LOCKS DETECTED', prefix: '!', badge: 'ALERT', badgeCls: 'bl-warn', delay: 2400 },
+    { text: 'BREACH WINDOW OPEN — PROCEED IMMEDIATELY', prefix: '!', badge: '', badgeCls: '', delay: 2900 },
+  ];
+ 
+  function runBoot() {
+    el.bootLines.innerHTML = '';
+    BOOT_LINES.forEach(line => {
+      const div = document.createElement('div');
+      div.className = 'boot-line' + (line.cls ? ' ' + line.cls : '');
+      if (line.prefix) {
+        const pre = document.createElement('span');
+        pre.className = 'bl-prefix'; pre.textContent = line.prefix;
+        div.appendChild(pre);
+      }
+      const txt = document.createElement('span');
+      txt.textContent = line.text; div.appendChild(txt);
+      if (line.badge) {
+        const badge = document.createElement('span');
+        badge.className = line.badgeCls; badge.textContent = line.badge;
+        div.appendChild(badge);
+      }
+      el.bootLines.appendChild(div);
+ 
+      setTimeout(() => {
+        div.classList.add('show');
+        playBootTick();
+      }, line.delay);
+    });
+ 
+    const lastDelay = BOOT_LINES[BOOT_LINES.length - 1].delay + 600;
+    setTimeout(() => { el.bootBtnRow.classList.add('show'); }, lastDelay);
+  }
+ 
+  /* ════════════════════════════════════════════════════
+     THEME SHIFT
+  ════════════════════════════════════════════════════ */
+  function applyTheme(idx) {
+    const t = THEMES[idx];
+    const root = document.documentElement;
+    root.style.setProperty('--accent',      t.accent);
+    root.style.setProperty('--accent-glow', t.glow);
+    root.style.setProperty('--accent-dim',  t.dim);
+    root.style.setProperty('--border-lit',  t.headerBorder);
+ 
+    // Derive a rough frequency from the theme's hue for the sound
+    const freqMap = [440, 330, 550];
+    playThemeShift(freqMap[idx] || 440);
+  }
+ 
+  /* ════════════════════════════════════════════════════
+     OVERLAY
+  ════════════════════════════════════════════════════ */
+  function showLockOverlay(msg, sub, duration, callback) {
+    el.overlayMsg.textContent = msg;
+    el.overlaySub.textContent = sub;
+    el.overlay.classList.add('visible');
+    setTimeout(() => {
+      el.overlay.classList.remove('visible');
+      setTimeout(callback, 260);
+    }, duration);
+  }
+ 
+  /* ════════════════════════════════════════════════════
+     TIMER
+  ════════════════════════════════════════════════════ */
+  function startTimer() {
+    state.startTime = Date.now();
+    state.timerInterval = setInterval(() => {
+      const s = Math.floor((Date.now() - state.startTime) / 1000);
+      el.timer.textContent = `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+    }, 500);
+  }
+  function stopTimer()  { clearInterval(state.timerInterval); state.timerInterval = null; }
+  function getElapsed() {
+    if (!state.startTime) return '—';
+    const s = Math.floor((Date.now() - state.startTime) / 1000);
+    return Math.floor(s/60) > 0 ? `${Math.floor(s/60)}m ${s%60}s` : `${s}s`;
+  }
+ 
+  /* ════════════════════════════════════════════════════
+     TYPEWRITER
+  ════════════════════════════════════════════════════ */
+  function typewrite(node, text, speed, onDone) {
+    if (state.typewriterTimer) clearInterval(state.typewriterTimer);
+    node.textContent = ''; node.classList.add('typing');
+    let i = 0;
+    state.typewriterTimer = setInterval(() => {
+      node.textContent += text[i++];
+      if (i >= text.length) {
+        clearInterval(state.typewriterTimer);
+        state.typewriterTimer = null;
+        node.classList.remove('typing');
+        if (onDone) onDone();
+      }
+    }, speed);
+  }
+ 
+  /* ════════════════════════════════════════════════════
+     DETAIL RENDER
+  ════════════════════════════════════════════════════ */
+  function renderDetail(rawText, highlightLines, hlClass) {
+    el.puzzleDetail.innerHTML = rawText.split('\n').map((line, i) => {
+      const esc = line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      return (highlightLines && highlightLines.includes(i))
+        ? `<span class="${hlClass}">${esc}</span>`
+        : esc;
+    }).join('\n');
+  }
+ 
+  /* ════════════════════════════════════════════════════
+     DISPLAY
+  ════════════════════════════════════════════════════ */
+  function buildDisplay(len) {
+    el.codeDisplay.innerHTML = '';
+    for (let i = 0; i < len; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'code-digit empty'; cell.dataset.digit = i;
+      const val = document.createElement('span'); val.className = 'digit-val';
+      cell.appendChild(val); el.codeDisplay.appendChild(cell);
+    }
+  }
+  function getDigitEls() { return el.codeDisplay.querySelectorAll('.code-digit'); }
+  function refreshDisplay() {
+    const digits = getDigitEls();
+    const puzzle = PUZZLES[state.currentPuzzle];
+    digits.forEach((cell, i) => {
+      const v = cell.querySelector('.digit-val');
+      cell.classList.remove('empty','filled','error','success','active-cursor');
+      if (state.inputBuffer[i] !== undefined) {
+        cell.classList.add('filled'); v.textContent = state.inputBuffer[i];
+      } else {
+        cell.classList.add('empty'); v.textContent = '';
+        if (i === state.inputBuffer.length) cell.classList.add('active-cursor');
+      }
+    });
+    el.btnSubmit.disabled = state.inputBuffer.length < puzzle.answer.length;
+  }
+ 
+  /* ════════════════════════════════════════════════════
+     ATTEMPT PIPS
+  ════════════════════════════════════════════════════ */
+  const WARN_THRESHOLD = 2;
+  function refreshAttemptPips() {
+    el.attemptPips.forEach((pip, i) => pip.classList.toggle('used', i < state.wrongThisPuzzle));
+    const warn = state.wrongThisPuzzle >= WARN_THRESHOLD;
+    el.lockoutWarn.classList.toggle('visible', warn);
+    el.btnHint.classList.toggle('warn', warn);
+    if (warn && state.wrongThisPuzzle === WARN_THRESHOLD) playWarning();
+  }
+ 
+  /* ════════════════════════════════════════════════════
+     LOAD PUZZLE
+  ════════════════════════════════════════════════════ */
+  function loadPuzzle(idx) {
+    const p = PUZZLES[idx];
+    state.inputBuffer = []; state.hintsUsedThisPuzzle = 0;
+    state.wrongThisPuzzle = 0; state.locked = false;
+ 
+    el.puzzleCounter.textContent = `${String(idx+1).padStart(2,'0')} / ${String(PUZZLES.length).padStart(2,'0')}`;
+    el.pips.forEach((pip, i) => {
+      pip.classList.remove('done','active');
+      if (i < idx) pip.classList.add('done');
+      if (i === idx) pip.classList.add('active');
+    });
+ 
+    buildDisplay(p.answer.length);
+    refreshDisplay(); refreshAttemptPips();
+    setFeedback('','');
+    updateHintUI();
+    el.hintPanel.hidden = true;
+    el.hintText.textContent = '';
+    el.btnHint.setAttribute('aria-expanded','false');
+    el.btnHint.classList.remove('warn');
+    el.lockoutWarn.classList.remove('visible');
+ 
+    // Apply theme
+    applyTheme(p.theme || 0);
+ 
+    // Typewrite title → clue → reveal detail
+    el.puzzleDetail.textContent = '';
+    el.puzzleDetail.classList.remove('detail-visible');
+    el.puzzleTitle.textContent = '';
+    el.puzzleClue.textContent = '';
+ 
+    typewrite(el.puzzleTitle, p.title, 18, () => {
+      typewrite(el.puzzleClue, p.clue, 14, () => {
+        setTimeout(() => {
+          renderDetail(p.detail || '', [], '');
+          requestAnimationFrame(() => el.puzzleDetail.classList.add('detail-visible'));
+        }, 200);
+      });
+    });
+  }
+ 
+  /* ════════════════════════════════════════════════════
+     INPUT
+  ════════════════════════════════════════════════════ */
+  function pressKey(value) {
+    if (state.locked) return;
+    const p = PUZZLES[state.currentPuzzle];
+    if (state.inputBuffer.length >= p.answer.length) return;
+    getAudio();
+    state.inputBuffer.push(value);
+    playDigit();
+    refreshDisplay(); setFeedback('','');
+    if (state.inputBuffer.length === p.answer.length) setTimeout(checkAnswer, 140);
+  }
+ 
+  function pressClear() {
+    if (state.locked) return;
+    if (!state.inputBuffer.length) return;
+    state.inputBuffer = []; playClear();
+    refreshDisplay(); setFeedback('','');
+  }
+ 
+  function checkAnswer() {
+    if (state.locked) return;
+    const p = PUZZLES[state.currentPuzzle];
+    if (state.inputBuffer.join('') !== p.answer) wrongAnswer(); else correctAnswer();
+  }
+ 
+  /* ════════════════════════════════════════════════════
+     WRONG ANSWER — glitch + sound
+  ════════════════════════════════════════════════════ */
+  function wrongAnswer() {
+    state.totalAttempts++; state.wrongThisPuzzle++;
+    state.locked = true;
+ 
+    // Sound
+    playError();
+    setTimeout(playGlitch, 60);
+ 
+    // Digits
+    getDigitEls().forEach(c => { c.classList.remove('filled','empty','active-cursor'); c.classList.add('error'); });
+    setFeedback('INCORRECT — TRY AGAIN','error');
+    refreshAttemptPips();
+ 
+    // Clue panel glitch
+    el.cluePanel.classList.remove('glitch');
+    void el.cluePanel.offsetWidth; // force reflow to restart animation
+    el.cluePanel.classList.add('glitch');
+ 
+    setTimeout(() => {
+      el.cluePanel.classList.remove('glitch');
+      state.inputBuffer = []; state.locked = false;
+      refreshDisplay(); setFeedback('','');
+    }, 700);
+  }
+ 
+  /* ════════════════════════════════════════════════════
+     CORRECT ANSWER
+  ════════════════════════════════════════════════════ */
+  function correctAnswer() {
+    state.locked = true;
+    const p = PUZZLES[state.currentPuzzle];
+    playSuccess();
+    getDigitEls().forEach((c, i) => setTimeout(() => {
+      c.classList.remove('filled','empty','active-cursor'); c.classList.add('success');
+    }, i * 80));
+    setFeedback(p.successMsg || 'CODE ACCEPTED','success');
+ 
+    const next = state.currentPuzzle + 1;
+    const isLast = next >= PUZZLES.length;
+    setTimeout(() => {
+      showLockOverlay(
+        `LOCK ${String(state.currentPuzzle+1).padStart(2,'0')} RELEASED`,
+        isLast ? 'All locks cleared. Extracting evidence...' : `Proceeding to Lock ${String(next+1).padStart(2,'0')}...`,
+        1400,
+        () => { if (isLast) winGame(); else { state.currentPuzzle = next; loadPuzzle(next); } }
+      );
+    }, 600);
+  }
+ 
+  /* ════════════════════════════════════════════════════
+     HINTS
+  ════════════════════════════════════════════════════ */
+  function requestHint() {
+    const p = PUZZLES[state.currentPuzzle];
+    if (state.hintsUsedThisPuzzle >= p.hints.length) return;
+    const hintIdx = state.hintsUsedThisPuzzle;
+    el.hintText.textContent = p.hints[hintIdx];
+    state.hintsUsedThisPuzzle++; state.hintsUsed++;
+    const highlights = p.hintHighlights && p.hintHighlights[hintIdx];
+    const hlClass = state.hintsUsedThisPuzzle >= 3 ? 'hl-2' : 'hl-1';
+    if (highlights && highlights.length) {
+      renderDetail(p.detail || '', highlights, hlClass);
+      el.puzzleDetail.classList.add('detail-visible');
+    }
+    el.hintPanel.hidden = false;
+    el.btnHint.setAttribute('aria-expanded','true');
+    el.hintPanel.style.animation = 'none';
+    requestAnimationFrame(() => { el.hintPanel.style.animation = ''; });
+    updateHintUI(); playHint();
+  }
+ 
+  function updateHintUI() {
+    const rem = PUZZLES[state.currentPuzzle].hints.length - state.hintsUsedThisPuzzle;
+    el.hintCount.textContent = rem; el.btnHint.disabled = rem === 0;
+  }
+ 
+  /* ════════════════════════════════════════════════════
+     FEEDBACK
+  ════════════════════════════════════════════════════ */
+  function setFeedback(msg, type) {
+    el.feedback.textContent = msg;
+    el.feedback.className = 'feedback-strip' + (type ? ` ${type}` : '');
+  }
+ 
+  /* ════════════════════════════════════════════════════
+     WIN
+  ════════════════════════════════════════════════════ */
+  function buildRecap() {
+    const checkSVG = `<svg width="14" height="14" viewBox="0 0 12 12" aria-hidden="true">
+      <polyline points="2,6 5,9 10,3" fill="none" stroke="var(--success)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
+    el.winRecap.innerHTML = `
+      <div class="win-recap-label">SKILLS DEMONSTRATED</div>
+      ${PUZZLES.map(p => `
+        <div class="recap-item">
+          <div class="recap-check" aria-hidden="true">${checkSVG}</div>
+          <div class="recap-text">
+            <span class="recap-skill">${p.skill}</span>
+            <span class="recap-body">${p.recap}</span>
+          </div>
+        </div>`).join('')}`;
+  }
+ 
+  function winGame() {
+    stopTimer();
+    // Reset to default blue accent for win screen
+    const root = document.documentElement;
+    root.style.setProperty('--accent',      '#4a9eff');
+    root.style.setProperty('--accent-glow', 'rgba(74,158,255,0.3)');
+    root.style.setProperty('--accent-dim',  'rgba(74,158,255,0.12)');
+    el.pips.forEach(pip => { pip.classList.remove('active'); pip.classList.add('done'); });
+    el.finalTime.textContent     = getElapsed();
+    el.finalHints.textContent    = state.hintsUsed;
+    el.finalAttempts.textContent = state.totalAttempts;
+    el.finalRating.textContent   = calcRating();
+    buildRecap(); showScreen('win');
+    setTimeout(playWin, 200);
+  }
+ 
+  function calcRating() {
+    const s = state.startTime ? Math.floor((Date.now()-state.startTime)/1000) : 999;
+    if (state.hintsUsed===0 && state.totalAttempts===0 && s<120) return '★★★ ELITE';
+    if (state.hintsUsed<=1 && state.totalAttempts<=1)            return '★★☆ AGENT';
+    if (state.hintsUsed<=3 && state.totalAttempts<=4)            return '★☆☆ RECRUIT';
+    return '☆☆☆ CADET';
+  }
+ 
+  /* ════════════════════════════════════════════════════
+     GAME START
+  ════════════════════════════════════════════════════ */
+  function startGame() {
+    state.currentPuzzle=0; state.inputBuffer=[];
+    state.hintsUsed=0; state.hintsUsedThisPuzzle=0;
+    state.wrongThisPuzzle=0; state.totalAttempts=0;
+    state.locked=false; el.timer.textContent='00:00';
+    loadPuzzle(0); showScreen('game'); startTimer();
+  }
+ 
+  /* ════════════════════════════════════════════════════
+     RIPPLE
+  ════════════════════════════════════════════════════ */
+  function triggerRipple(keyEl, e) {
+    const face = keyEl.querySelector('.key-face'); if (!face) return;
+    const r = keyEl.getBoundingClientRect();
+    face.style.setProperty('--rx',`${((e.clientX-r.left)/r.width*100).toFixed(1)}%`);
+    face.style.setProperty('--ry',`${((e.clientY-r.top)/r.height*100).toFixed(1)}%`);
+    keyEl.classList.add('pressed');
+    setTimeout(() => keyEl.classList.remove('pressed'), 200);
+  }
+ 
+  /* ════════════════════════════════════════════════════
+     EVENTS
+  ════════════════════════════════════════════════════ */
+  el.start.addEventListener('click', () => { getAudio(); startGame(); });
+  el.start2.addEventListener('click', () => { getAudio(); startGame(); });
+  el.replay.addEventListener('click', () => showScreen('intro'));
+  el.keys.forEach(k => k.addEventListener('pointerdown', e => { triggerRipple(k,e); pressKey(k.dataset.value); }));
+  el.btnClear.addEventListener('pointerdown', e => { triggerRipple(el.btnClear,e); pressClear(); });
+  el.btnSubmit.addEventListener('pointerdown', e => { if (!el.btnSubmit.disabled) triggerRipple(el.btnSubmit,e); });
+  el.btnSubmit.addEventListener('click', () => { const p=PUZZLES[state.currentPuzzle]; if (state.inputBuffer.length===p.answer.length) checkAnswer(); });
+  el.btnHint.addEventListener('click', requestHint);
+ 
+  document.addEventListener('keydown', e => {
+    if (!screens.game.classList.contains('active')) return;
+    if (e.key>='0' && e.key<='9') {
+      pressKey(e.key);
+      const k = document.querySelector(`.key[data-value="${e.key}"]`);
+      if (k) { k.classList.add('pressed'); setTimeout(()=>k.classList.remove('pressed'),180); }
+    }
+    if (e.key==='Backspace'||e.key==='Delete') { if (state.inputBuffer.length) { state.inputBuffer.pop(); playClear(); refreshDisplay(); } }
+    if (e.key==='Enter') { const p=PUZZLES[state.currentPuzzle]; if (state.inputBuffer.length===p.answer.length) checkAnswer(); }
+  });
+ 
+  /* ════════════════════════════════════════════════════
+     INIT — run boot on load
+  ════════════════════════════════════════════════════ */
+  runBoot();
+ 
+})();
+</script>
+</body>
+</html>
+ 
